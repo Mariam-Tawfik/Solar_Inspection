@@ -38,10 +38,10 @@ def get_json_file():
     # Return the JSON data
     return jsonify(json_data)
 
-#@app.route("/")
+@app.route("/")
 @app.route("/home")
 def home():
-     return render_template('services.html')
+     return render_template('home.html')
 
 @app.route("/about")
 def about():
@@ -54,7 +54,11 @@ def card1():
 
 @app.route('/choosePath')
 def choose_path():
-    return render_template('choose_path.html')
+    return render_template('uploadfield.html')
+
+# @app.route('/choose_path')
+# def choose_path():
+#     return render_template('uploadfield.html')
 
 
 
@@ -207,7 +211,8 @@ def handle_form_data():
    ################################### 
    with open("static/data.json", 'r') as f:
         gpsfile = json.load(f)
-   data={'filename':filename ,'layer_name':layer_name,'GPS_file': ,'Images'}
+    # data={'filename':filename ,'layer_name':layer_name,'GPS_file': ,'Images'}
+   data={'filename':filename ,'layer_name':layer_name}
 
    url=URL_Domain+'/api/processCAD'
 
@@ -221,7 +226,6 @@ def handle_form_data():
    return render_template('choose_dxf.html')
 
 
-@app.route('/')
 @app.route('/choose_dxf', methods=['GET'])
 def choose_dxf():
     return render_template('choose_dxf.html')
@@ -287,18 +291,13 @@ def handle_ser_input():
             lower_right_lat = float(request.form.get('lower_right_lat'))
             lower_right_lon = float(request.form.get('lower_right_lon'))
             
-            # Process the uploaded image and other form data here
-            # Example: Save the image to a directory
-            image_path = os.path.join('uploads', image.filename)
-            image.save(image_path)
+             # Process form data
+            gps_points = process_form_data(image, upper_left_lat, upper_left_lon, lower_right_lat, lower_right_lon)
             
-            # Call the waypoints_planning function to process the image and generate GPS file
-            output_gps_file = waypoints_planning(image_path, upper_left_lat, upper_left_lon, lower_right_lat, lower_right_lon)
-            
-            if output_gps_file:
-                return f'Image uploaded successfully! GPS file generated: {output_gps_file}'
+            if gps_points:
+                return render_template('map.html', gps_points=json.dumps(gps_points))
             else:
-                return 'Error processing image and generating GPS file.'
+                return render_template('services.html')
 
 
 
@@ -321,22 +320,49 @@ def login():
              flash('Log in unsuccessful', 'danger')
     return render_template('login.html',title='Login',form=form)
 
-@app.route('/')
-def index():
-    # Read GPS points from the text file
-    gps_points = []
-    with open('static/test_part_gps.txt', 'r') as file:
-        for line in file:
-            # Parse each line and remove parentheses
-            line = line.strip().replace('(', '').replace(')', '')
-            # Split the line into individual coordinates
-            start_lat, start_lng, end_lat, end_lng = map(float, line.split(','))
-            # Append the GPS points to the list
-            gps_points.append({'start': {'lat': start_lat, 'lng': start_lng}, 'end': {'lat': end_lat, 'lng': end_lng}})
-    
-    # Pass GPS points to the template
-    return render_template('map.html', gps_points=json.dumps(gps_points))
+@app.route('/handle_field_info', methods=['POST'])
+def handle_field_info():
+     if request.method == 'POST':
+        # Check if the 'image' file and other form fields are present in the request
+        if 'image' in request.files:
+            # Get the uploaded file
+            image = request.files['image']
+            
+            # Get other form data: upper left and lower right corner GPS coordinates
+            upper_left_lat = float(request.form.get('upper_left_lat'))
+            upper_left_lon = float(request.form.get('upper_left_lon'))
+            lower_right_lat = float(request.form.get('lower_right_lat'))
+            lower_right_lon = float(request.form.get('lower_right_lon'))
+            
+             # Process form data
+            gps_points = process_form_data(image, upper_left_lat, upper_left_lon, lower_right_lat, lower_right_lon)
+            return render_template('choose_dxf.html')
 
+        
+
+def process_form_data(image, upper_left_lat, upper_left_lon, lower_right_lat, lower_right_lon):
+    # Process the uploaded image and other form data here
+    # Example: Save the image to a directory
+    image_path = os.path.join('uploads/', image.filename)
+    print('image_path',image_path)
+    image.save(image_path)
+    
+    # Call the waypoints_planning function to process the image and generate GPS file
+    output_gps_file = waypoints_planning(image_path, upper_left_lat, upper_left_lon, lower_right_lat, lower_right_lon)
+    
+    if output_gps_file:
+        gps_points = []
+        with open('static/test_part_gps.txt', 'r') as file:
+            for line in file:
+                # Parse each line and remove parentheses
+                line = line.strip().replace('(', '').replace(')', '')
+                # Split the line into individual coordinates
+                start_lat, start_lng, end_lat, end_lng = map(float, line.split(','))
+                # Append the GPS points to the list
+                gps_points.append({'start': {'lat': start_lat, 'lng': start_lng}, 'end': {'lat': end_lat, 'lng': end_lng}})
+        return gps_points
+    else:
+        return None
 
 if __name__ == "__main__":
     # Run the Flask app in debug mode

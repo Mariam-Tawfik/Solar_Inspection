@@ -238,7 +238,7 @@ def process_image(image_file_path,label_file_path,lat1,lon1,lat2,lon2):
     output_directory = os.path.join('static')
 
     # Extracting the filename without extension from the input image path
-    output_image_filename = os.path.splitext(os.path.basename(input_image_path))[0] + '_gps.txt'
+    output_image_filename = os.path.splitext(os.path.basename(image_file_path))[0] + '_gps.txt'
 
     # Creating the output path for the GPS text file
     output_path_gps = os.path.join(output_directory, output_image_filename)
@@ -269,7 +269,7 @@ def process_image(image_file_path,label_file_path,lat1,lon1,lat2,lon2):
             gps_points.append((gps_start, gps_end))
 
     # Find the point with minimum latitude and minimum longitude
-    upper_left_gps = (start_lat, start_long)
+    upper_left_gps = (lat1, lon1)
     start_point = min(gps_points, key=lambda x: calculate_distance(upper_left_gps, x[0]))
 
     # Reorder GPS points using nearest neighbor algorithm starting from the minimum point
