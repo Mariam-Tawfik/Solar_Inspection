@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div id="map" style="height: 600px; width: 1000px; margin: 50px auto 0;"></div>
+
+<script>
+    function initMap() {
+      var center = { lat: 24.454865, lng: 32.690726 };
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 100,
+        center: center,
+        mapTypeId: google.maps.MapTypeId.SATELLITE
+      });
+  
+      var gpsPoints = {{ gps_points | safe }};
+      var index = 0; // Initialize index counter
+  
+      // Function to add a marker for the next GPS point
+      function addNextMarker() {
+        if (index < gpsPoints.length * 2) {
+          var point = gpsPoints[Math.floor(index / 2)]; // Get the current GPS point
+          var markerType = (index % 2 === 0) ? 'start' : 'end'; // Alternate between start and end markers
+  
+          var marker = new google.maps.Marker({
+            position: (markerType === 'start') ? point.start : point.end,
+            map: map,
+            title: markerType.charAt(0).toUpperCase() + markerType.slice(1) // Capitalize marker type
+          });
+  
+          // Increment index to move to the next GPS point
+          index++;
+  
+          // Call addNextMarker again after a delay
+          setTimeout(addNextMarker, 700); // Adjust delay as needed
+        }
+      }
+  
+      // Call the addNextMarker function initially
+      addNextMarker();
+    }
+  </script>
+    
+
+<script src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap" async defer></script>
+
+
+{% endblock content %}

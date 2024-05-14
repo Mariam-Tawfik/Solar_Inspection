@@ -1,0 +1,8 @@
+runs/
+processed_images/
+flaskApp/
+backend/__pycache__/
+segment_weights.pt
+yolov5s.pt
+best.pt
+__pycache__/

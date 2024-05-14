@@ -1,0 +1,240 @@
+body::before {
+    display: block;
+    content: '';
+    height: 60px;
+}
+
+.card {
+    transition: 0.7s ease;
+    box-shadow: 0 5px 15px rgba(1 1 1/ 15);
+    border-radius: 5px;
+    margin: 5px;
+
+}
+
+.card:hover {
+    transform: scale(1.1);
+}
+
+.lesson {
+    box-shadow: 0 5px 15px rgba(200 200 200/ 15);
+    border-radius: 5px;
+    border: 1px solid #fff;
+
+}
+
+.post:hover {
+    /* transform: scale(1.1); */
+    opacity: 0.9;
+}
+
+.button_width {
+    min-width: 120px;
+    max-width: 120px;
+}
+
+.article-img {
+    height: 65px;
+    width: 65px;
+    margin-right: 8px;
+}
+
+.user-img {
+    height: 150px;
+    width: 150px;
+    margin-right: 8px;
+}
+
+.link {
+    text-decoration: none;
+}
+
+.nobull {
+    list-style-type: none;
+}
+
+.arabic-sc {
+    font-family: 'Rakkas', cursive;
+}
+
+.content-section {
+    background: #ffffff;
+    padding: 10px 20px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 20px;
+}
+/* get started button */
+.cta-button.centered {
+    display: block;
+    width: 250px; /* Increase the width as needed */
+    margin: 20px auto; /* Adds margin before and after button, and centers it horizontally */
+    padding: 15px 30px; /* Increase padding for larger button */
+    background-color: #011d3a;
+    color: rgb(247, 221, 53);
+    text-decoration: none;
+    border-radius: 8px; /* Increase border radius for a more rounded button */
+    font-size: 2rem; /* Increase font size for larger button text */
+    font-weight: bold; /* Add bold font weight for emphasis */
+    transition: background-color 0.3s ease;
+}
+
+.cta-button.centered:hover {
+    background-color: #0056b3;
+}
+.card {
+    width: 80%;
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    text-align: center;
+    transition: opacity 0.5s ease;
+}
+
+.next-button {
+    display: block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.next-button:hover {
+    background-color: #0056b3;
+}
+.lead.font-weight-bold {
+    font-size: 0.9em; /* Adjust the font size as needed */
+}
+
+.how-it-works {
+    background-color: #5fa4ef; /* Dark blue background */
+    color: #fff; /* White text */
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.how-it-works h2 {
+    font-size: 2em; /* Larger font size for heading */
+}
+
+.step {
+    margin-bottom: 30px;
+    text-align: left; /* Center-align the text */
+}
+.step1 {
+    margin-bottom: 30px;
+    text-align: center; /* Center-align the text */
+}
+
+.step h3 {
+    font-size: 1.5em; /* Large font size for step titles */
+    color: black; /* Dark blue text */
+    text-decoration: underline;
+}
+
+.step p {
+
+    line-height: 1.6;
+    text-align: left; /* Center-align the text */
+          
+    font-size: 1.5em;
+
+}
+
+.prev-button {
+    display: block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #fff; /* White background */
+    color: #007bff; /* Dark blue text */
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.prev-button:hover {
+    background-color: #f0f0f0; /* Light gray background on hover */
+}
+
+.start_button {
+    display: block;
+    margin-top: 40px;
+    padding: 10px 20px;
+    background-color: #fff; /* White background */
+    color: #000b16; /* Dark blue text */
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: x-large;
+    font-weight: bold;
+
+}
+
+.start_button:hover {
+    background-color: #f0f0f0; /* Light gray background on hover */
+}
+
+.container {
+    text-align: center;
+}
+
+.center {
+    text-align: center;
+    margin-top: 30px; /* Adjust the margin as needed */
+}
+
+.branch-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+}
+
+.branch {
+    width: 30%;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+input[type="file"] {
+    display: block;
+    margin: 10px auto;
+}
+.bold-underline {
+    font-weight: bold;
+    text-decoration: underline;
+}
+p strong {
+    font-weight: bold;
+}
+
+p {
+    text-align: left; /* or whatever alignment you prefer */
+}
+.navbar-nav .nav-link {
+    color: gray; /* Set default color */
+    font-size: smaller; /* Set default font size */
+}
+
+.navbar-nav .nav-link.active {
+    color: white; /* Set active color */
+    font-size: larger; /* Set active font size */
+}

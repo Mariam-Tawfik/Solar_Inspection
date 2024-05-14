@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+<div class="container">
+    <h2 class="center">Choose Path</h2>
+    <form action="{{ url_for('handle_input') }}" method="post" enctype="multipart/form-data">
+
+    <div class="branch-container">
+        <div class="branch" id="image-branch">
+            <label for="image" class="bold-underline">Choose Image:</label>
+            <input type="file" id="image" name="image">
+        </div>
+        <div class="branch" id="folder-branch">
+            <label for="folder" class="bold-underline">Choose Folder with Images:</label>
+            <input type="file" id="folder" name="folder" directory webkitdirectory mozdirectory>
+        </div>
+        <div class="branch" id="video-branch">
+            <label for="video" class="bold-underline">Choose Video:</label>
+            <input type="file" id="video" name="video">
+        </div>
+    </div>
+    <button type="submit" class="submit-button">Submit</button>
+</form>
+</div>
+
+</body>
+</html>
+{% endblock content %}

@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Add your custom styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container1 {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: #007bff;
+        }
+        
+        p {
+            line-height: 1.6;
+          
+            font-size: 1.5em;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 15px 40px; /* Increased width */
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-size: 2em;
+            font-weight: bold;
+            width: 100%; /* Added to ensure full width */
+            max-width: 600px; /* Added to limit maximum width */
+            box-sizing: border-box; /* Added to include padding in width */
+        }
+        
+        .button:hover {
+            background-color: #30a5ff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container1">
+    <h2>1. Intelligent Inspection</h2>
+    <p>Our AI-powered models meticulously scan every frame of your videos and images, identifying even the slightest defects or abnormalities.</p>
+   
+</div>
+
+<div class="container1">
+    <h2>2. Streamlined Workflow:</h2>
+    <p>With SolarInspect, streamline your inspection process effortlessly. Upload your footage, sit back, and let our algorithms do the heavy lifting.</p>
+    
+</div>
+
+<div class="container1">
+    <h2>3. Detailed Reports:</h2>
+    <p>Receive comprehensive reports detailing detected defects, their locations, and severity levels, enabling prompt and targeted maintenance actions.</p>
+   
+</div>
+
+<div class="container1">
+    <h2>How It Works</h2>
+    <div class="step">
+        <h3>Step 1: Upload Your Data</h3>
+        <p>Simply upload your video footage or images of solar panels to our platform.</p>
+    </div>
+    <div class="step">
+        <h3>Step 2: Analysis</h3>
+        <p>Our advanced machine learning models analyze every pixel, identifying potential defects and anomalies.</p>
+    </div>
+    <div class="step">
+        <h3>Step 3: Review and Action</h3>
+        <p>Receive detailed reports and insights, enabling you to take proactive measures to ensure optimal solar panel performance.</p>
+    </div>
+
+    
+</div>
+<div class="step1">
+    <a href="{{ url_for('choose_path') }}" class="button">Let's Start</a>
+</div>
+</body>
+</html>
+{% endblock content %}

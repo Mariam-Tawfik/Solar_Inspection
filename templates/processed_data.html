@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<body>
+    <div class="container">
+        <h2 style="margin-top: 20px;">Processed Data</h2>    
+        {% if data %}
+            {% for item in data['folder'] %}
+                <div>
+                    <p><strong>Total time taken:</strong> {{ item.total_time }}</p>
+                    {% if item.image_path %}
+                        <img class="img-fluid w-50 d-none d-sm-block" src="{{ item.image_path }}" alt="">
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No data available.</p>
+        {% endif %}
+    </div>
+    <div class="container text-center"> <!-- Center the button -->
+        <h2 style="margin-top: 20px;">SolarInspect Report</h2>  
+        <form id="pdfForm" method="POST" action="/generate-pdf">
+            {% if data %}
+            <input type="hidden" name="total_time" value="{{ data.total_time }}">
+            {% if data.image_path %}
+            <input type="hidden" name="image_path" value="{{ data.image_path }}">
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Download SolarInspect Report (PDF)</button>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>
+{% endblock content %}

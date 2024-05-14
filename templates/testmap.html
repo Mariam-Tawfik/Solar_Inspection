@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div id="map" style="height: 450px; width: 600px;"></div>
+
+<script>
+  // Initialize the map
+  function initMap() {
+    // Specify the center of the map
+    var center = { lat: 29.6802, lng: 32.3174 };
+
+    // Create the map with satellite view
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 15,
+      center: center,
+      mapTypeId: google.maps.MapTypeId.SATELLITE // Set map type to satellite
+    });
+
+    // Example GPS points (replace with your actual points)
+    var gpsPoints = [
+      { lat: 29.681096, lng: 32.315151, title: 'Point 1' },
+      { lat: 29.679902, lng: 32.315134, title: 'Point 2' }
+    ];
+
+    // Loop through GPS points and add markers to the map
+    gpsPoints.forEach(function (point) {
+      var marker = new google.maps.Marker({
+        position: { lat: point.lat, lng: point.lng },
+        map: map,
+        title: point.title
+      });
+    });
+  }
+</script>
+
+<!-- Load the Google Maps JavaScript API with your API key -->
+<script src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap" async defer></script>
+
+{% endblock content %}
