@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+<!-- User Options Section -->
+<section class="bg-light text-dark p-5 text-center">
+    <div class="container">
+        <h2 class="mb-4">Choose Your Analysis Method</h2>
+        <p class="lead mb-4">Select how you would like to proceed with your solar panel analysis. You can either upload your images for a detailed report or opt for an interactive visualization with a comprehensive report.</p>
+        <div class="row">
+            <!-- Option 1: Upload Images for Analysis -->
+            <div class="col-md-6 mb-4">
+                <div class="option-card p-4 bg-white shadow rounded h-100">
+                    <h3>Upload Images for Analysis</h3>
+                    <p>Upload your thermal and RGB images, and receive a detailed report with the analysis results.</p>
+                    <a href="{{ url_for('choose_path') }}" class="btn btn-primary mt-3">Start Your Inspection</a>
+                </div>
+            </div>
+            <!-- Option 2: Interactive Visualization -->
+            <div class="col-md-6 mb-4">
+                <div class="option-card p-4 bg-white shadow rounded h-100">
+                    <h3>Interactive Visualization</h3>
+                    <p>Visualize the analysis results interactively and receive a comprehensive report.</p>
+                    <a href="#" class="btn btn-secondary mt-3">Explore Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

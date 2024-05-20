@@ -1,64 +1,129 @@
 {% extends "layout.html" %}
 {% block content %}
+<!-- Welcome Section -->
 <section class="bg-dark text-light p-5 p-lg-0 pt-lg-5 text-center text-sm-start">
     <div class="container">
         <div class="d-sm-flex align-items-center justify-content-between">
             <div>
-                <h1 class="mb-10"> Welcome <span class="text-warning"> To SolarInspect</span></h1>
-                <p class="lead my-4">
-                    Empowering Solar Panel Inspection with AI.
-                </p>
-
+                <h1 class="mb-10">Welcome <span class="text-warning">To SolarInspect</span></h1>
+                <p class="lead my-4">Empowering Solar Panel Inspection with AI.</p>
+                <a href="{{ url_for('card1') }}" class="btn btn-warning btn-lg mt-3">Start Your Inspection</a>
             </div>
-            <img class="img-fluid w-50 d-none d-sm-block" src="{{url_for('static', filename='solar.png')}}" alt="">
+            <img class="img-fluid w-50 d-none d-sm-block" src="{{ url_for('static', filename='solar.png') }}" alt="SolarInspect">
         </div>
     </div>
 </section>
-<!-- Social Media -->
+
+<!-- Social Media Section -->
 <section class="bg-primary text-light p-5">
     <div class="container">
         <div class="d-md-flex justify-content-between align-items-center">
             <h3 class="mb-3 text-center">Join Our Community</h3>
             <nav class="navbar navbar-expand-lg navbar-dark">
-                <button class="navbar-toggler border" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#socialbtn">
+                <button class="navbar-toggler border" type="button" data-bs-toggle="collapse" data-bs-target="#socialbtn">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="socialbtn">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="btn btn-dark ms-5 button_width" href=""
-                                target="_blank">
-                                <i class="bi-github" role="img"></i>
-                                GitHub
+                            <a class="btn btn-dark ms-5 button_width" href="https://github.com" target="_blank">
+                                <i class="bi-github" role="img"></i> GitHub
                             </a>
                         </li>
-                        <li>
-                            <a class="btn btn-dark ms-5 button_width" href=""
-                                target="_blank">
-                                <i class="bi bi-facebook "></i>
-                                Facebook
-                            </a>
-                        </li>
-                  
                         <li class="nav-item">
-                            <a class="btn btn-dark ms-5 button_width" href=""
-                                target="_blank">
-                                <i class="bi bi-twitter"></i>
-                                Twitter
+                            <a class="btn btn-dark ms-5 button_width" href="https://facebook.com" target="_blank">
+                                <i class="bi bi-facebook"></i> Facebook
                             </a>
-
                         </li>
-                        
+                        <li class="nav-item">
+                            <a class="btn btn-dark ms-5 button_width" href="https://twitter.com" target="_blank">
+                                <i class="bi bi-twitter"></i> Twitter
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </nav>
         </div>
-
-    </div>
     </div>
 </section>
 
-<a href="{{ url_for('card1') }}" class="cta-button centered">Get Started</a>
+<!-- About Section -->
+<section class="bg-light text-dark p-5 text-center">
+    <div class="container">
+        <h2 class="mb-4">About SolarInspect</h2>
+        <p class="lead mb-4">SolarInspect utilizes advanced AI algorithms to automate the inspection process of solar panels, ensuring efficiency, accuracy, and safety. Our solution is designed to detect faults and inefficiencies, helping you maintain optimal performance for your solar power systems.</p>
+        <img class="img-fluid w-75" src="{{ url_for('static', filename='about.jpg') }}" alt="About SolarInspect">
+    </div>
+</section>
 
+<!-- How SolarInspect Can Help You Section -->
+<section class="bg-white text-dark p-5 text-center">
+    <div class="container">
+        <h2 class="mb-4">How Can SolarInspect Help You</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="help-feature p-4">
+                    <img src="{{ url_for('static', filename='om.png') }}" class="img-fluid mb-3" alt="O&M">
+                    <h5>Operations & Maintenance (O&M)</h5>
+                    <p>Ensure the optimal performance of your solar panels with our comprehensive O&M services, designed to minimize downtime and maximize efficiency.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="help-feature p-4">
+                    <img src="{{ url_for('static', filename='thermography.png') }}" class="img-fluid mb-3" alt="Thermography">
+                    <h5>Thermography of Solar Fields</h5>
+                    <p>Utilize advanced thermographic analysis to detect potential issues and faults in your solar field, ensuring timely interventions and maintenance.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="help-feature p-4">
+                    <img src="{{ url_for('static', filename='analysis.png') }}" class="img-fluid mb-3" alt="Analysis">
+                    <h5>Detailed Analysis</h5>
+                    <p>Get in-depth analysis and reports on the performance and condition of your solar panels, helping you make informed decisions for optimal management.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="bg-light text-dark p-5 text-center">
+    <div class="container">
+        <h2 class="mb-4">What Our Users Say</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="testimonial">
+                    <img class="img-fluid rounded-circle mb-3" src="{{ url_for('static', filename='user1.jpg') }}" alt="User 1">
+                    <h5 class="mb-1">John Doe</h5>
+                    <p class="lead">"SolarInspect has revolutionized our solar panel maintenance. The AI-powered inspections are quick and incredibly accurate."</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial">
+                    <img class="img-fluid rounded-circle mb-3" src="{{ url_for('static', filename='user2.jpg') }}" alt="User 2">
+                    <h5 class="mb-1">Jane Smith</h5>
+                    <p class="lead">"Thanks to SolarInspect, we've significantly reduced downtime and improved the efficiency of our solar power systems."</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial">
+                    <img class="img-fluid rounded-circle mb-3" src="{{ url_for('static', filename='user3.jpg') }}" alt="User 3">
+                    <h5 class="mb-1">Sam Wilson</h5>
+                    <p class="lead">"The detailed reports and fault detection provided by SolarInspect are invaluable for maintaining our solar infrastructure."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer Section -->
+<footer class="bg-dark text-light p-3 text-center">
+    <div class="container">
+        <div class="social-icons">
+            <a href="https://github.com" class="text-light me-2"><i class="bi bi-github"></i></a>
+            <a href="https://facebook.com" class="text-light me-2"><i class="bi bi-facebook"></i></a>
+            <a href="https://twitter.com" class="text-light"><i class="bi bi-twitter"></i></a>
+        </div>
+    </div>
+</footer>
 {% endblock content %}

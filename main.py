@@ -19,7 +19,7 @@ from flask_cors import CORS
 
 
 app = Flask(__name__)
-URL_Domain='https://0416-41-129-234-81.ngrok-free.app'
+URL_Domain='https://e31a-102-60-78-203.ngrok-free.app'
 
 
 app.config['SECRET_KEY']='962d4d203bdebe514e6a4856b2fa1730279bb814a3cfc3e720277662f98aa9fb'
@@ -43,6 +43,12 @@ def get_json_file():
 def home():
      return render_template('home.html')
 
+
+@app.route("/choose_analysis_method")
+def choose_analysis_method():
+     return render_template('choose_analysis_method.html')
+
+
 @app.route("/about")
 def about():
     return render_template('about.html',title="About")
@@ -54,11 +60,8 @@ def card1():
 
 @app.route('/choosePath')
 def choose_path():
-    return render_template('uploadfield.html')
+    return render_template('choose_path.html')
 
-# @app.route('/choose_path')
-# def choose_path():
-#     return render_template('uploadfield.html')
 
 
 
@@ -261,7 +264,7 @@ def handle_dxf_files():
         return data
     else:
         # Handle error
-        return "Failed to retrieve data from Service B"
+        return "Failed to retrieve data"
 
 
 @app.route('/uploadCAD', methods=['POST'])
