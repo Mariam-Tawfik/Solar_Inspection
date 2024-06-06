@@ -1,0 +1,236 @@
+[
+    {
+        "id": 1,
+        "corners_pixel": {
+            "top_left": {
+                "x": 70,
+                "y": 75
+            },
+            "top_right": {
+                "x": 237,
+                "y": 75
+            },
+            "bottom_left": {
+                "x": 70,
+                "y": 120
+            },
+            "bottom_right": {
+                "x": 237,
+                "y": 120
+            }
+        },
+        "gps_coordinates": {
+            "top_left": {
+                "latitude": 24.455063595238094,
+                "longitude": 32.6902269020979
+            },
+            "top_right": {
+                "latitude": 24.455063595238094,
+                "longitude": 32.69062746853147
+            },
+            "bottom_left": {
+                "latitude": 24.45498895238095,
+                "longitude": 32.6902269020979
+            },
+            "bottom_right": {
+                "latitude": 24.45498895238095,
+                "longitude": 32.69062746853147
+            }
+        }
+    },
+    {
+        "id": 2,
+        "corners_pixel": {
+            "top_left": {
+                "x": 294,
+                "y": 88
+            },
+            "top_right": {
+                "x": 453,
+                "y": 88
+            },
+            "bottom_left": {
+                "x": 294,
+                "y": 145
+            },
+            "bottom_right": {
+                "x": 453,
+                "y": 145
+            }
+        },
+        "gps_coordinates": {
+            "top_left": {
+                "latitude": 24.455042031746032,
+                "longitude": 32.69076418881119
+            },
+            "top_right": {
+                "latitude": 24.455042031746032,
+                "longitude": 32.69114556643357
+            },
+            "bottom_left": {
+                "latitude": 24.454947484126986,
+                "longitude": 32.69076418881119
+            },
+            "bottom_right": {
+                "latitude": 24.454947484126986,
+                "longitude": 32.69114556643357
+            }
+        }
+    },
+    {
+        "id": 3,
+        "corners_pixel": {
+            "top_left": {
+                "x": 237,
+                "y": 171
+            },
+            "top_right": {
+                "x": 253,
+                "y": 171
+            },
+            "bottom_left": {
+                "x": 237,
+                "y": 187
+            },
+            "bottom_right": {
+                "x": 253,
+                "y": 187
+            }
+        },
+        "gps_coordinates": {
+            "top_left": {
+                "latitude": 24.45490435714286,
+                "longitude": 32.69062746853147
+            },
+            "top_right": {
+                "latitude": 24.45490435714286,
+                "longitude": 32.69066584615385
+            },
+            "bottom_left": {
+                "latitude": 24.454877817460318,
+                "longitude": 32.69062746853147
+            },
+            "bottom_right": {
+                "latitude": 24.454877817460318,
+                "longitude": 32.69066584615385
+            }
+        }
+    },
+    {
+        "id": 4,
+        "corners_pixel": {
+            "top_left": {
+                "x": 274,
+                "y": 175
+            },
+            "top_right": {
+                "x": 279,
+                "y": 175
+            },
+            "bottom_left": {
+                "x": 274,
+                "y": 180
+            },
+            "bottom_right": {
+                "x": 279,
+                "y": 180
+            }
+        },
+        "gps_coordinates": {
+            "top_left": {
+                "latitude": 24.454897722222224,
+                "longitude": 32.690716216783215
+            },
+            "top_right": {
+                "latitude": 24.454897722222224,
+                "longitude": 32.69072820979021
+            },
+            "bottom_left": {
+                "latitude": 24.45488942857143,
+                "longitude": 32.690716216783215
+            },
+            "bottom_right": {
+                "latitude": 24.45488942857143,
+                "longitude": 32.69072820979021
+            }
+        }
+    },
+    {
+        "id": 5,
+        "corners_pixel": {
+            "top_left": {
+                "x": 61,
+                "y": 205
+            },
+            "top_right": {
+                "x": 219,
+                "y": 205
+            },
+            "bottom_left": {
+                "x": 61,
+                "y": 300
+            },
+            "bottom_right": {
+                "x": 219,
+                "y": 300
+            }
+        },
+        "gps_coordinates": {
+            "top_left": {
+                "latitude": 24.454847960317462,
+                "longitude": 32.690205314685315
+            },
+            "top_right": {
+                "latitude": 24.454847960317462,
+                "longitude": 32.690584293706294
+            },
+            "bottom_left": {
+                "latitude": 24.454690380952382,
+                "longitude": 32.690205314685315
+            },
+            "bottom_right": {
+                "latitude": 24.454690380952382,
+                "longitude": 32.690584293706294
+            }
+        }
+    },
+    {
+        "id": 6,
+        "corners_pixel": {
+            "top_left": {
+                "x": 282,
+                "y": 240
+            },
+            "top_right": {
+                "x": 444,
+                "y": 240
+            },
+            "bottom_left": {
+                "x": 282,
+                "y": 297
+            },
+            "bottom_right": {
+                "x": 444,
+                "y": 297
+            }
+        },
+        "gps_coordinates": {
+            "top_left": {
+                "latitude": 24.454789904761906,
+                "longitude": 32.6907354055944
+            },
+            "top_right": {
+                "latitude": 24.454789904761906,
+                "longitude": 32.69112397902098
+            },
+            "bottom_left": {
+                "latitude": 24.45469535714286,
+                "longitude": 32.6907354055944
+            },
+            "bottom_right": {
+                "latitude": 24.45469535714286,
+                "longitude": 32.69112397902098
+            }
+        }
+    }
+]

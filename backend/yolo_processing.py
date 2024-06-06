@@ -99,6 +99,7 @@ def process_image(image_file_path,label_file_path,lat1,lon1,lat2,lon2):
     from PIL import Image
     from scipy import ndimage
     import os
+    import json
 
 
     # Read the image
@@ -257,6 +258,7 @@ def process_image(image_file_path,label_file_path,lat1,lon1,lat2,lon2):
 
 
     gps_points = []
+    data = []
 
     # Calculate bounding boxes, centers, widths, and heights for each object
     for i in range(1, nr_objects + 1):
@@ -277,6 +279,34 @@ def process_image(image_file_path,label_file_path,lat1,lon1,lat2,lon2):
             gps_start = pixel_to_gps(x_middle, y1)
             gps_end = pixel_to_gps(x_middle, y2)
             gps_points.append((gps_start, gps_end))
+        # Add the data to the list
+            # Convert corner coordinates to GPS
+        top_left_gps_corner = pixel_to_gps(x1, y1)
+        top_right_gps_corner = pixel_to_gps(x2, y1)
+        bottom_left_gps_corner = pixel_to_gps(x1, y2)
+        bottom_right_gps_corner = pixel_to_gps(x2, y2)
+        data.append({
+            "id": i,
+            "corners_pixel": {
+                "top_left": {"x": x1, "y": y1},
+                "top_right": {"x": x2, "y": y1},
+                "bottom_left": {"x": x1, "y": y2},
+                "bottom_right": {"x": x2, "y": y2}
+            },
+            "gps_coordinates": {
+                "top_left": {"latitude": top_left_gps_corner[0], "longitude": top_left_gps_corner[1]},
+                "top_right": {"latitude": top_right_gps_corner[0], "longitude": top_right_gps_corner[1]},
+                "bottom_left": {"latitude": bottom_left_gps_corner[0], "longitude": bottom_left_gps_corner[1]},
+                "bottom_right": {"latitude": bottom_right_gps_corner[0], "longitude": bottom_right_gps_corner[1]}
+            }
+        })
+    with open('satellite/complete_gps_file.json', 'w') as json_file:
+        json.dump(data, json_file, indent=4)
+        
+
+
+        
+
 
     # Find the point with minimum latitude and minimum longitude
     upper_left_gps = (lat1, lon1)
@@ -312,6 +342,6 @@ end_lat=29.937309
 end_long=31.066357
 
 #output_gps_file=waypoints_planning(input_image_path,start_lat,start_long,end_lat,end_long)
-print(output_gps_file)
+#print(output_gps_file)
 
 #file=segment_PV('test2.jpg')

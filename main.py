@@ -19,7 +19,7 @@ from flask_cors import CORS
 
 
 app = Flask(__name__)
-URL_Domain='https://9678-102-57-99-143.ngrok-free.app'
+URL_Domain='https://8206-45-247-72-132.ngrok-free.app'
 
 
 app.config['SECRET_KEY']='962d4d203bdebe514e6a4856b2fa1730279bb814a3cfc3e720277662f98aa9fb'
@@ -67,6 +67,9 @@ def card1():
 def choose_path():
     return render_template('choose_path.html')
 
+@app.route('/uploadfield')
+def uploadfield():
+    return render_template('uploadfield.html')
 
 
 
@@ -217,10 +220,10 @@ def handle_form_data():
    filename= request.form.get('filename')
    layer_name= request.form.get('layer_name')
    ################################### 
-   with open("static/data.json", 'r') as f:
+   with open("satellite/complete_gps_file.json", 'r') as f:
         gpsfile = json.load(f)
     # data={'filename':filename ,'layer_name':layer_name,'GPS_file': ,'Images'}
-   data={'filename':filename ,'layer_name':layer_name}
+   data={'filename':filename ,'layer_name':layer_name,'gps_coordinates':gpsfile}
 
    url=URL_Domain+'/api/processCAD'
 
@@ -231,7 +234,7 @@ def handle_form_data():
         json.dump(response.json(), f, indent=4)
         print(response)
 
-   return render_template('choose_dxf.html')
+   return render_template('choose_path.html')
 
 
 @app.route('/choose_dxf', methods=['GET'])
@@ -320,7 +323,7 @@ def handle_field_info():
             
              # Process form data
             gps_points = process_form_data(image, upper_left_lat, upper_left_lon, lower_right_lat, lower_right_lon)
-            return render_template('choose_dxf.html')
+            return render_template('upload_dxf.html')
 
         
 
@@ -347,6 +350,8 @@ def process_form_data(image, upper_left_lat, upper_left_lon, lower_right_lat, lo
         return gps_points, output_gps_file
     else:
         return None, None
+
+
 
 @app.route('/handle_ser_input', methods=['POST'])
 def handle_ser_input():
