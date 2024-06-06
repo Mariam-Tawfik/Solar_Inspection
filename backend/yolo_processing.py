@@ -1,5 +1,9 @@
 
+
+
 def classify_thermal_PV(input_image_path):
+
+
     import os
     from ultralytics import YOLO
     import time
@@ -102,28 +106,34 @@ def process_image(image_file_path,label_file_path,lat1,lon1,lat2,lon2):
     # Prepare the mask
     mask = np.zeros(image.shape[:2], dtype=np.uint8)
     # Read the segmented labels file and extract coordinates for each polygon
-    with open(label_file_path, 'r') as file:
-        for line in file:
-            data = line.strip().split()[1:]  # Skip the first number (class object)
-            coordinates = np.array(data, dtype=float).reshape(-1, 2)
-            # Adjust coordinates for image dimensions (assuming they are normalized)
-            coordinates *= np.array(image.shape[1::-1])  # width (x) and height (y)
-            # Draw each polygon on the mask
-            cv2.fillPoly(mask, [coordinates.astype(int)], color=255)
+    if os.path.exists(label_file_path):
+        with open(label_file_path, 'r') as file:
+            for line in file:
+                data = line.strip().split()[1:]  # Skip the first number (class object)
+                coordinates = np.array(data, dtype=float).reshape(-1, 2)
+                # Adjust coordinates for image dimensions (assuming they are normalized)
+                coordinates *= np.array(image.shape[1::-1])  # width (x) and height (y)
+                # Draw each polygon on the mask
+                cv2.fillPoly(mask, [coordinates.astype(int)], color=255)
 
-    # Apply the mask to the original image to get the segmented part
-    segmented_part = cv2.bitwise_and(image, image, mask=mask)
-    # Create a gray image
-    gray_image = np.full_like(image, 0, dtype=np.uint8)  # You can adjust the gray level here
+        # Apply the mask to the original image to get the segmented part
+        segmented_part = cv2.bitwise_and(image, image, mask=mask)
+        # Create a gray image
+        gray_image = np.full_like(image, 0, dtype=np.uint8)  # You can adjust the gray level here
 
-    # Invert the mask
-    inverted_mask = cv2.bitwise_not(mask)
+        # Invert the mask
+        inverted_mask = cv2.bitwise_not(mask)
 
-    # Apply the inverted mask to the gray image
-    background = cv2.bitwise_and(gray_image, gray_image, mask=inverted_mask)
+        # Apply the inverted mask to the gray image
+        background = cv2.bitwise_and(gray_image, gray_image, mask=inverted_mask)
 
-    # Merge the segmented part with the gray image
-    result = cv2.add(segmented_part, background)
+        # Merge the segmented part with the gray image
+        result = cv2.add(segmented_part, background)
+        cv2.imwrite('reult.jpg', result)
+    else:
+        result=image
+
+
     hist = cv2.calcHist([result], [0], None, [256], [0, 256]).flatten()
     hist = cv2.normalize(hist, hist, 0, 255, cv2.NORM_MINMAX)  # Normalize for better visibility
 
@@ -154,10 +164,10 @@ def process_image(image_file_path,label_file_path,lat1,lon1,lat2,lon2):
     # Custom binary transformation
     # Custom binary transformation
     if valley_index < 100:
-        _, thresholded_image = cv2.threshold(image, valley_index, 255, cv2.THRESH_BINARY)
+        _, thresholded_image = cv2.threshold(result, valley_index, 255, cv2.THRESH_BINARY)
     else:
         # Reverse transformation with exception for value 0
-        thresholded_image = np.where((image > valley_index) | (image == 0), 0, 255).astype(np.uint8)  # Ensure uint8 type here
+        thresholded_image = np.where((result > valley_index) | (result == 0), 0, 255).astype(np.uint8)  # Ensure uint8 type here
 
     # iterations of dilation and erosion
     # Dilate the thresholded image
@@ -173,11 +183,11 @@ def process_image(image_file_path,label_file_path,lat1,lon1,lat2,lon2):
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5)) # Adjust kernel size as needed
     dilated_image = cv2.dilate(eroded_image, kernel, iterations=1)
 
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))  # Adjust kernel size as needed
-    eroded_image = cv2.erode(dilated_image, kernel, iterations=1)
+    # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))  # Adjust kernel size as needed
+    # eroded_image = cv2.erode(dilated_image, kernel, iterations=1)
 
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5)) # Adjust kernel size as needed
-    dilated_image = cv2.dilate(eroded_image, kernel, iterations=1)
+    # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5)) # Adjust kernel size as needed
+    # dilated_image = cv2.dilate(eroded_image, kernel, iterations=1)
 
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))  # Adjust kernel size as needed
     eroded_image = cv2.erode(dilated_image, kernel, iterations=1)
@@ -235,7 +245,7 @@ def process_image(image_file_path,label_file_path,lat1,lon1,lat2,lon2):
     lon_per_pixel = (lon2 - lon1) / width
     lat_per_pixel = (lat1 - lat2) / height
 
-    output_directory = os.path.join('static')
+    output_directory = os.path.join('gps_output')
 
     # Extracting the filename without extension from the input image path
     output_image_filename = os.path.splitext(os.path.basename(image_file_path))[0] + '_gps.txt'
@@ -294,12 +304,14 @@ def waypoints_planning(input_image_path,start_lat,start_long,end_lat,end_long):
    output_gps_file=process_image(input_image_path,label_file_path,start_lat,start_long,end_lat,end_long)
    return output_gps_file
 
-# input_image_path='uploads/test_part.jpg'
-# start_lat=24.455188
-# start_long= 32.690059
+input_image_path='test.jpg'
+start_lat=29.937424
+start_long=  31.066178
+29.937309, 31.066357
+end_lat=29.937309
+end_long=31.066357
 
-# end_lat=24.454561
-# end_long=32.691431
+#output_gps_file=waypoints_planning(input_image_path,start_lat,start_long,end_lat,end_long)
+print(output_gps_file)
 
-# output_gps_file=waypoints_planning(input_image_path,start_lat,start_long,end_lat,end_long)
-# #print(output_gps_file)
+#file=segment_PV('test2.jpg')

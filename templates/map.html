@@ -3,43 +3,47 @@
 
 <div id="map" style="height: 600px; width: 1000px; margin: 50px auto 0;"></div>
 
+<button id="download-button">Download GPS Points</button>
+
 <script>
     function initMap() {
-      var center = { lat: 24.454865, lng: 32.690726 };
-      var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 100,
-        center: center,
-        mapTypeId: google.maps.MapTypeId.SATELLITE
-      });
-  
-      var gpsPoints = {{ gps_points | safe }};
-      var index = 0; // Initialize index counter
-  
-      // Function to add a marker for the next GPS point
-      function addNextMarker() {
-        if (index < gpsPoints.length * 2) {
-          var point = gpsPoints[Math.floor(index / 2)]; // Get the current GPS point
-          var markerType = (index % 2 === 0) ? 'start' : 'end'; // Alternate between start and end markers
-  
-          var marker = new google.maps.Marker({
-            position: (markerType === 'start') ? point.start : point.end,
-            map: map,
-            title: markerType.charAt(0).toUpperCase() + markerType.slice(1) // Capitalize marker type
-          });
-  
-          // Increment index to move to the next GPS point
-          index++;
-  
-          // Call addNextMarker again after a delay
-          setTimeout(addNextMarker, 700); // Adjust delay as needed
+        var center = { lat: 24.454865, lng: 32.690726 };
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 100,
+            center: center,
+            mapTypeId: google.maps.MapTypeId.SATELLITE
+        });
+
+        var gpsPoints = {{ gps_points | safe }};
+        var index = 0;
+
+        function addNextMarker() {
+            if (index < gpsPoints.length * 2) {
+                var point = gpsPoints[Math.floor(index / 2)];
+                var markerType = (index % 2 === 0) ? 'start' : 'end';
+
+                var marker = new google.maps.Marker({
+                    position: (markerType === 'start') ? point.start : point.end,
+                    map: map,
+                    title: markerType.charAt(0).toUpperCase() + markerType.slice(1)
+                });
+
+                index++;
+                setTimeout(addNextMarker, 700);
+            }
         }
-      }
-  
-      // Call the addNextMarker function initially
-      addNextMarker();
+
+        addNextMarker();
     }
-  </script>
-    
+
+    document.getElementById('download-button').addEventListener('click', function() {
+        var filePath = '{{ gps_file_path }}';
+        if (filePath) {
+            window.location.href = '/download_gps_file?file_path=' + encodeURIComponent(filePath);
+        }
+    });
+</script>
+
 
 <script src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap" async defer></script>
 

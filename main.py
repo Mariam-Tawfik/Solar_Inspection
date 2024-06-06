@@ -19,7 +19,7 @@ from flask_cors import CORS
 
 
 app = Flask(__name__)
-URL_Domain='https://e31a-102-60-78-203.ngrok-free.app'
+URL_Domain='https://9678-102-57-99-143.ngrok-free.app'
 
 
 app.config['SECRET_KEY']='962d4d203bdebe514e6a4856b2fa1730279bb814a3cfc3e720277662f98aa9fb'
@@ -52,6 +52,11 @@ def choose_analysis_method():
 @app.route("/about")
 def about():
     return render_template('about.html',title="About")
+
+@app.route("/upload_dxf")
+def upload_dxf():
+    return render_template('upload_dxf.html',title="upload_dxf")
+
 
 @app.route('/card1')
 def card1():
@@ -280,30 +285,6 @@ def uploadCAD():
 
 
 
-@app.route('/handle_ser_input', methods=['POST'])
-def handle_ser_input():
-    if request.method == 'POST':
-        # Check if the 'image' file and other form fields are present in the request
-        if 'image' in request.files:
-            # Get the uploaded file
-            image = request.files['image']
-            
-            # Get other form data: upper left and lower right corner GPS coordinates
-            upper_left_lat = float(request.form.get('upper_left_lat'))
-            upper_left_lon = float(request.form.get('upper_left_lon'))
-            lower_right_lat = float(request.form.get('lower_right_lat'))
-            lower_right_lon = float(request.form.get('lower_right_lon'))
-            
-             # Process form data
-            gps_points = process_form_data(image, upper_left_lat, upper_left_lon, lower_right_lat, lower_right_lon)
-            
-            if gps_points:
-                return render_template('map.html', gps_points=json.dumps(gps_points))
-            else:
-                return render_template('services.html')
-
-
-
 @app.route("/register" ,methods=["GET","POST"])
 def register():
     form=RegistrationForm()
@@ -345,27 +326,54 @@ def handle_field_info():
 
 def process_form_data(image, upper_left_lat, upper_left_lon, lower_right_lat, lower_right_lon):
     # Process the uploaded image and other form data here
-    # Example: Save the image to a directory
     image_path = os.path.join('uploads/', image.filename)
-    print('image_path',image_path)
+    print('image_path', image_path)
     image.save(image_path)
     
     # Call the waypoints_planning function to process the image and generate GPS file
     output_gps_file = waypoints_planning(image_path, upper_left_lat, upper_left_lon, lower_right_lat, lower_right_lon)
+    output_gps_file = os.path.join('gps_output/', output_gps_file)
+   
+
+    print(output_gps_file)
     
     if output_gps_file:
         gps_points = []
-        with open('static/test_part_gps.txt', 'r') as file:
+        with open(output_gps_file, 'r') as file:
             for line in file:
-                # Parse each line and remove parentheses
                 line = line.strip().replace('(', '').replace(')', '')
-                # Split the line into individual coordinates
                 start_lat, start_lng, end_lat, end_lng = map(float, line.split(','))
-                # Append the GPS points to the list
                 gps_points.append({'start': {'lat': start_lat, 'lng': start_lng}, 'end': {'lat': end_lat, 'lng': end_lng}})
-        return gps_points
+        return gps_points, output_gps_file
     else:
-        return None
+        return None, None
+
+@app.route('/handle_ser_input', methods=['POST'])
+def handle_ser_input():
+    if request.method == 'POST':
+        if 'image' in request.files:
+            image = request.files['image']
+            upper_left_lat = float(request.form.get('upper_left_lat'))
+            upper_left_lon = float(request.form.get('upper_left_lon'))
+            lower_right_lat = float(request.form.get('lower_right_lat'))
+            lower_right_lon = float(request.form.get('lower_right_lon'))
+
+            gps_points, gps_file_path = process_form_data(image, upper_left_lat, upper_left_lon, lower_right_lat, lower_right_lon)
+            
+            if gps_points:
+                return render_template('map.html', gps_points=json.dumps(gps_points), gps_file_path=gps_file_path)
+            else:
+                return render_template('services.html')
+
+@app.route('/download_gps_file', methods=['GET'])
+def download_gps_file():
+    gps_file_path = request.args.get('file_path')
+    if gps_file_path and os.path.exists(gps_file_path):
+        return send_file(gps_file_path, as_attachment=True, download_name=os.path.basename(gps_file_path), mimetype='text/plain')
+    return "File not found", 404
+
+
+
 
 if __name__ == "__main__":
     # Run the Flask app in debug mode
