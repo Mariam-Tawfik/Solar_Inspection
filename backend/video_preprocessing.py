@@ -445,7 +445,7 @@ def get_starting_cutting_pixels(text_file_values, indeces):
 
 def extraction(input_video_path, folder_path, output_dir):
     resolution = get_video_resolution_frames(input_video_path)
-    direction = video_movement_direction_optimized(input_file_right)
+    direction = video_movement_direction_optimized(input_video_path)
     if direction == 'left':
         flip_video(input_video_path, 'flipped_output.mp4')
         labels_dir, _ = detect_solar_module(

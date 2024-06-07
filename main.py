@@ -93,15 +93,13 @@ def uploadfield():
 @app.route('/handle_input', methods=['POST'])
 def handle_input():
     # Get the uploaded files
-    video_file = request.files.get('video')
-    
      # Get the uploaded files
     # Option 1: Individual Files or Folders   
     rgb_image = request.files.get('rgb_image')
     thermal_image =  request.files.get('thermal_image')
     rgb_folder = request.files.getlist('rgb_folder')
     thermal_folder = request.files.getlist('thermal_folder')
-    rgb_video = request.files.get('rgb_video')
+    video_file = request.files.get('rgb_video')
     thermal_video = request.files.get('thermal_video')
     
     # Option 2: Combined Files or Folders

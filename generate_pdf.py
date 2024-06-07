@@ -4,7 +4,7 @@ from reportlab.lib.colors import blue
 from reportlab.pdfgen import canvas
 from io import BytesIO
 import json
-
+logo_path = ""
 
 def generate_pdf_rgb_image(data):
 
@@ -15,7 +15,7 @@ def generate_pdf_rgb_image(data):
     p = canvas.Canvas(buffer, pagesize=letter)
 
      # Add the logo
-    logo_path = "E:\FlaskApp\drone.png"
+    # logo_path = "E:\FlaskApp\drone.png"
     p.drawImage(logo_path, x=505, y=710, width=70, height=80) 
 
     # Add the title for the report
@@ -125,7 +125,7 @@ def generate_pdf_rgb_folder(folder):
     p.drawString(title_x, page_height - 50, title)  # Center the title vertically
 
     # Add the logo
-    logo_path = "E:\FlaskApp\drone.png"
+    # logo_path = "E:\FlaskApp\drone.png"
     p.drawImage(logo_path, x=505, y=710, width=70, height=80) 
 
     # draw a line
@@ -196,7 +196,7 @@ def generate_pdf_rgb_folder(folder):
             p.drawImage(rgb_image_path, x=x_coordinate, y=y_coordinate,width=200, height=200)
         
         # Add the logo
-        logo_path = "E:\FlaskApp\drone.png"
+        # logo_path = "E:\FlaskApp\drone.png"
         p.drawImage(logo_path, x=505, y=710, width=70, height=80) 
 
         # Add the title for the report
@@ -310,7 +310,7 @@ def generate_pdf_thermal_image(processed_image_path):
     p = canvas.Canvas(buffer, pagesize=letter)
     
     # Add the logo
-    logo_path = "E:\FlaskApp\drone.png"
+    # logo_path = "E:\FlaskApp\drone.png"
     p.drawImage(logo_path, x=505, y=710, width=70, height=80) 
 
     # Add the title for the report
@@ -434,7 +434,7 @@ def generate_pdf_thermal_folder(folder):
 
 
         # Add the logo
-        logo_path = "E:\FlaskApp\drone.png"
+        # logo_path = "E:\FlaskApp\drone.png"
         p.drawImage(logo_path, x=505, y=710, width=70, height=80) 
 
         # Add the title for the report
@@ -540,7 +540,7 @@ def generate_pdf_thermal_rgb_images(data):
     p = canvas.Canvas(buffer, pagesize=letter)
 
      # Add the logo
-    logo_path = "E:\FlaskApp\drone.png"
+    # logo_path = "E:\FlaskApp\drone.png"
     p.drawImage(logo_path, x=505, y=710, width=70, height=80) 
 
     # Add the title for the report
