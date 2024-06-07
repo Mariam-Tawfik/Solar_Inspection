@@ -40,7 +40,7 @@ def generate_pdf_rgb_image(data):
     p.setFont("Helvetica", 8)
     p.drawRightString(page_width-550, 30, "© SolarInspect") 
     
-    source_path= "E:\\FlaskApp\\"
+    source_path= ""
     rgb_image_path = os.path.join(source_path, processed_image_path)
     x_coordinate= title_x-20
     y_coordinate= 480
@@ -141,7 +141,7 @@ def generate_pdf_rgb_folder(folder):
     p.drawRightString(page_width-550, 30, "© SolarInspect") 
 
    # adding coordinates 
-    source_path= "E:\\FlaskApp\\"
+    source_path= ""
     x_coordinate= title_x-20
     y_coordinate= 480
     x_width= 60
@@ -381,7 +381,7 @@ def generate_pdf_thermal_folder(folder):
     p.drawRightString(page_width-550, 30, "© SolarInspect") 
 
    # Adding coordinates 
-    source_path= "E:\\FlaskApp\\"
+    source_path= ""
     x_coordinate= title_x-20
     y_coordinate= 480
     x_width= 60
@@ -565,7 +565,7 @@ def generate_pdf_thermal_rgb_images(data):
     p.setFont("Helvetica", 8)
     p.drawRightString(page_width-550, 30, "© SolarInspect") 
     
-    source_path= "E:\\FlaskApp\\"
+    source_path= ""
     rgb_image_path = os.path.join(source_path, image_path_1)
     thermal_image_path = os.path.join(source_path, image_path_2)
     x_coordinate= title_x-20
