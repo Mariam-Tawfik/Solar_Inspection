@@ -3,8 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from backend.yolo_processing import classify_thermal_PV
 from backend.yolo_processing import segment_PV ,waypoints_planning
-from io import BytesIO  # Import BytesIO
 
+from backend.video_preprocessing import extraction
+from io import BytesIO  # Import BytesIO
 import os
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template ,url_for ,flash, redirect, request, send_file,jsonify
@@ -79,11 +80,30 @@ def handle_input():
     video_file = request.files.get('video')
     folder_files = request.files.getlist('folder')
     image_file = request.files.get('image')
+    print('Hi' ,video_file)
+    print('Hi' ,folder_files)
+    print('Hi' ,image_file)
 
     # Process the files using the appropriate function based on the type of input
     processed_data = {}
+    if video_file:
+        # Define the path to save the video
+        video_path = os.path.join('uploads', video_file.filename)
+        print('video path',video_path)
+        # Save the video file
+        video_file.save(video_path)
+        
 
-    if image_file:
+        
+        # Run the extraction function
+        extraction(video_path, 'uploads/folder', 'uploads/output')
+        print('after')
+
+        
+        return 'Video file processed and extraction function executed.'
+
+
+    elif image_file:
         # Process individual image file (if provided)
         input_image_path = f"{image_file.filename}"
         image_file.save(input_image_path)
@@ -137,76 +157,12 @@ def handle_input():
             processed_image['image_path'] = new_path
 
         processed_data['folder'] = processed_images
+    
+
 
     # Pass the processed data including image_path to the template
     return render_template('processed_data.html', data=processed_data)
 
-    # Get the uploaded files
-    video_file = request.files.get('video')
-    folder_files = request.files.getlist('folder')
-    image_file = request.files.get('image')
-
-    # Process the files using the appropriate function based on the type of input
-    processed_data = {}
-
-    if image_file:
-        # Process individual image file (if provided)
-        input_image_path = f"{image_file.filename}"
-        image_file.save(input_image_path)
-        output_image_path, total_time = classify_thermal_PV(input_image_path)
-        os.remove(input_image_path)
-        processed_data['image'] = {
-            'total_time': f"{total_time:.2f} seconds",
-            'image_path': output_image_path
-        }
-
-    elif folder_files:
-        # Process images in the folder (if provided)
-        processed_images = []
-       
-        for file in folder_files:
-            if file.filename != '':
-                filename = secure_filename(file.filename)
-             
-                # Save each image to a temporary location
-                input_image_path = f"{filename}"
-                file.save(input_image_path)
-                print(input_image_path)
-                output_image_path, total_time = classify_thermal_PV(input_image_path)
-                os.remove(input_image_path)
-                processed_images.append({
-                    'filename': filename,
-                    'total_time': f"{total_time:.2f} seconds",
-                    'image_path': output_image_path
-                })
-
-        # Create a new folder to store processed images
-        folder_path = os.path.dirname(file.filename)  # Extract folder name from file path
-        folder_name = os.path.basename(folder_path)  # Get the folder name
-        processed_folder_path = os.path.join('static', f"{folder_name}_processed")
-        os.makedirs(processed_folder_path, exist_ok=True)
-
-        # Move processed images to the new folder
-        for processed_image in processed_images:
-            old_path = processed_image['image_path']
-            new_path = os.path.join(processed_folder_path, processed_image['filename'])
-            
-            # Check if the target file already exists
-            if os.path.exists(new_path):
-                # Generate a new filename if it already exists
-                base, ext = os.path.splitext(processed_image['filename'])
-                count = 1
-                while os.path.exists(new_path):
-                    new_path = os.path.join(processed_folder_path, f"{base}_{count}{ext}")
-                    count += 1
-            
-            os.rename(old_path, new_path)
-            processed_image['image_path'] = new_path
-
-        processed_data['folder'] = processed_images
-    print("data=processed_data",processed_data)
-
-    return render_template('processed_data.html', data=processed_data)
 
 
 @app.route("/service" )

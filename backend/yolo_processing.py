@@ -1,14 +1,17 @@
 
+import cv2
+import numpy as np
+from scipy.signal import find_peaks
+from PIL import Image
+from scipy import ndimage
+import json
+import os
+from ultralytics import YOLO
+import time
+from PIL import Image
 
 
 def classify_thermal_PV(input_image_path):
-
-
-    import os
-    from ultralytics import YOLO
-    import time
-    from PIL import Image
-
     # Load the trained YOLOv8 model
     start_time = time.time()
     model = YOLO('best.pt')
@@ -72,9 +75,7 @@ def classify_thermal_PV(input_image_path):
 # #output_image_path, total_time=segment_PV('uploads/part.jpg')
 
 def segment_PV(input_image_path):
-    import os
-    from ultralytics import YOLO
-    from PIL import Image
+
 
     model = YOLO('segment_weights.pt')
 
@@ -90,17 +91,36 @@ def segment_PV(input_image_path):
     labels_file_path = os.path.join(results_obj.save_dir, "labels", input_filename + ".txt")
 
     return labels_file_path
+def calculate_distance(point1, point2):
+    # Calculate Euclidean distance between two points
+    return np.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
 
+def nearest_neighbor(gps_points, start_point):
+    ordered_points = []
+    remaining_points = gps_points.copy()
+
+    # Start from the specified start point
+
+
+    current_point = start_point
+
+    ordered_points.append(current_point)
+    remaining_points.remove(current_point)
+
+    # Find nearest neighbor until all points are covered
+    while remaining_points:
+        nearest_point = min(remaining_points, key=lambda x: calculate_distance(current_point[1], x[0]))
+        ordered_points.append(nearest_point)
+        current_point = nearest_point
+        remaining_points.remove(nearest_point)
+
+    return ordered_points
+
+def pixel_to_gps(x, y):
+    lon = lon1 + x * lon_per_pixel
+    lat = lat1 - y * lat_per_pixel
+    return lat, lon  # Note the order: latitude first, then longitude
 def process_image(image_file_path,label_file_path,lat1,lon1,lat2,lon2):
-
-    import cv2
-    import numpy as np
-    from scipy.signal import find_peaks
-    from PIL import Image
-    from scipy import ndimage
-    import os
-    import json
-
 
     # Read the image
     image = cv2.imread(image_file_path)
@@ -184,11 +204,6 @@ def process_image(image_file_path,label_file_path,lat1,lon1,lat2,lon2):
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5)) # Adjust kernel size as needed
     dilated_image = cv2.dilate(eroded_image, kernel, iterations=1)
 
-    # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))  # Adjust kernel size as needed
-    # eroded_image = cv2.erode(dilated_image, kernel, iterations=1)
-
-    # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5)) # Adjust kernel size as needed
-    # dilated_image = cv2.dilate(eroded_image, kernel, iterations=1)
 
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))  # Adjust kernel size as needed
     eroded_image = cv2.erode(dilated_image, kernel, iterations=1)
@@ -202,35 +217,7 @@ def process_image(image_file_path,label_file_path,lat1,lon1,lat2,lon2):
     img = np.asarray(img)
     height, width = img.shape
    #////////////////////////////////////////////// Nearest neighbor algorithm////////////////////////
-    def calculate_distance(point1, point2):
-        # Calculate Euclidean distance between two points
-        return np.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
 
-    def nearest_neighbor(gps_points, start_point):
-        ordered_points = []
-        remaining_points = gps_points.copy()
-
-        # Start from the specified start point
-
-
-        current_point = start_point
-
-        ordered_points.append(current_point)
-        remaining_points.remove(current_point)
-
-        # Find nearest neighbor until all points are covered
-        while remaining_points:
-            nearest_point = min(remaining_points, key=lambda x: calculate_distance(current_point[1], x[0]))
-            ordered_points.append(nearest_point)
-            current_point = nearest_point
-            remaining_points.remove(nearest_point)
-
-        return ordered_points
-
-    def pixel_to_gps(x, y):
-        lon = lon1 + x * lon_per_pixel
-        lat = lat1 - y * lat_per_pixel
-        return lat, lon  # Note the order: latitude first, then longitude
 
     # Apply Gaussian filter to smooth the image
     blur_radius = 1.0
@@ -302,11 +289,6 @@ def process_image(image_file_path,label_file_path,lat1,lon1,lat2,lon2):
         })
     with open('satellite/complete_gps_file.json', 'w') as json_file:
         json.dump(data, json_file, indent=4)
-        
-
-
-        
-
 
     # Find the point with minimum latitude and minimum longitude
     upper_left_gps = (lat1, lon1)
@@ -342,6 +324,3 @@ end_lat=29.937309
 end_long=31.066357
 
 #output_gps_file=waypoints_planning(input_image_path,start_lat,start_long,end_lat,end_long)
-#print(output_gps_file)
-
-#file=segment_PV('test2.jpg')
