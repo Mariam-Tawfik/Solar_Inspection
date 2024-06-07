@@ -15,7 +15,7 @@ def generate_pdf_rgb_image(data):
     p = canvas.Canvas(buffer, pagesize=letter)
 
      # Add the logo
-    logo_path = "E:\FlaskApp\drone.png"
+    logo_path = "drone.png"
     p.drawImage(logo_path, x=505, y=710, width=70, height=80) 
 
     # Add the title for the report
@@ -33,7 +33,7 @@ def generate_pdf_rgb_image(data):
     p.setFillColorRGB(0, 0, 0)
 
     # Add page number
-    p.setFont("Helvetica", 12)  # Set font back to regular
+    p.setFont("Helvetica", 12)  
     p.drawString(page_width - 60, 30, f"Page 0")
 
     # Add copy write
@@ -52,7 +52,7 @@ def generate_pdf_rgb_image(data):
     if processed_image_path:
 
         p.drawImage(rgb_image_path, x=x_coordinate, y=y_coordinate,width=200, height=200)
-        p.setFont("Helvetica-Oblique", 12)  # Set font style to italic
+        p.setFont("Helvetica-Oblique", 12) 
         p.drawString(title_x+40, 460, "Input RGB image")
     
         # Rename defect type
@@ -72,10 +72,10 @@ def generate_pdf_rgb_image(data):
         shown_defect = "Dirty"
 
     # Add RGB Defect Type
-    p.setFont("Helvetica-Bold", 12)  # Set font to bold
-    p.drawString(60, 410, "RGB Defect Type: ")  # Draw the bold text
-    p.setFont("Helvetica", 12)  # Set font back to regular
-    p.drawString(220, 410, shown_defect)  # Draw the regular text
+    p.setFont("Helvetica-Bold", 12) 
+    p.drawString(60, 410, "RGB Defect Type: ")  
+    p.setFont("Helvetica", 12) 
+    p.drawString(220, 410, shown_defect)  
 
     if defect == 'bird_drop' or defect == 'dirty':
         suggested_action = "Cleaning"
@@ -93,16 +93,16 @@ def generate_pdf_rgb_image(data):
         "Unknown defect type!"
 
     # Add the severity 
-    p.setFont("Helvetica-Bold", 12)  # Set font to bold
-    p.drawString(60, 390, "Severity:")  # Draw the bold text
-    p.setFont("Helvetica", 12)  # Set font back to regular
-    p.drawString(220, 390, severity)  # Draw the regular text
+    p.setFont("Helvetica-Bold", 12) 
+    p.drawString(60, 390, "Severity:") 
+    p.setFont("Helvetica", 12)  
+    p.drawString(220, 390, severity)
 
     # Add the suggested action 
-    p.setFont("Helvetica-Bold", 12)  # Set font to bold
-    p.drawString(60, 370, "Suggested Action:")  # Draw the bold text
-    p.setFont("Helvetica", 12)  # Set font back to regular
-    p.drawString(220, 370, suggested_action)  # Draw the regular text
+    p.setFont("Helvetica-Bold", 12)  
+    p.drawString(60, 370, "Suggested Action:") 
+    p.setFont("Helvetica", 12) 
+    p.drawString(220, 370, suggested_action) 
    
     p.showPage()
     p.save()
@@ -125,7 +125,7 @@ def generate_pdf_rgb_folder(folder):
     p.drawString(title_x, page_height - 50, title)  # Center the title vertically
 
     # Add the logo
-    logo_path = "E:\FlaskApp\drone.png"
+    logo_path = "drone.png"
     p.drawImage(logo_path, x=505, y=710, width=70, height=80) 
 
     # draw a line
@@ -133,7 +133,7 @@ def generate_pdf_rgb_folder(folder):
     p.setFillColorRGB(0, 0, 0)
 
     # Add page number
-    p.setFont("Helvetica", 12)  # Set font back to regular
+    p.setFont("Helvetica", 12)  
     p.drawString(page_width - 60, 30, f"Page 0")
 
     # Add copy write
@@ -196,7 +196,7 @@ def generate_pdf_rgb_folder(folder):
             p.drawImage(rgb_image_path, x=x_coordinate, y=y_coordinate,width=200, height=200)
         
         # Add the logo
-        logo_path = "E:\FlaskApp\drone.png"
+        logo_path = "drone.png"
         p.drawImage(logo_path, x=505, y=710, width=70, height=80) 
 
         # Add the title for the report
@@ -235,14 +235,14 @@ def generate_pdf_rgb_folder(folder):
 
         # Add the id of the panel
         p.setFont("Helvetica-Bold", 12)  
-        p.drawString(x_width, y_width, "Panel ID:")  # Draw the bold text
-        p.setFont("Helvetica", 12)  # Set font back to regular
+        p.drawString(x_width, y_width, "Panel ID:") 
+        p.setFont("Helvetica", 12)  
         p.drawString(220, y_width, str(id)) 
 
         # Add the row number of the panel
         p.setFont("Helvetica-Bold", 12)  
-        p.drawString(x_width, y_width-20, "Row Number:")  # Draw the bold text
-        p.setFont("Helvetica", 12)  # Set font back to regular
+        p.drawString(x_width, y_width-20, "Row Number:") 
+        p.setFont("Helvetica", 12)  
         p.drawString(220, y_width-20, str(row)) 
 
         # Add RGB Defect Type
@@ -310,7 +310,7 @@ def generate_pdf_thermal_image(processed_image_path):
     p = canvas.Canvas(buffer, pagesize=letter)
     
     # Add the logo
-    logo_path = "E:\FlaskApp\drone.png"
+    logo_path = "drone.png"
     p.drawImage(logo_path, x=505, y=710, width=70, height=80) 
 
     # Add the title for the report
@@ -328,7 +328,7 @@ def generate_pdf_thermal_image(processed_image_path):
     p.setFillColorRGB(0, 0, 0)
 
     # Add page number
-    p.setFont("Helvetica", 12)  # Set font back to regular
+    p.setFont("Helvetica", 12)  
     p.drawString(page_width - 60, 30, f"Page 0")
 
     # Add copy write
@@ -434,7 +434,7 @@ def generate_pdf_thermal_folder(folder):
 
 
         # Add the logo
-        logo_path = "E:\FlaskApp\drone.png"
+        logo_path = "drone.png"
         p.drawImage(logo_path, x=505, y=710, width=70, height=80) 
 
         # Add the title for the report
@@ -540,7 +540,7 @@ def generate_pdf_thermal_rgb_images(data):
     p = canvas.Canvas(buffer, pagesize=letter)
 
      # Add the logo
-    logo_path = "E:\FlaskApp\drone.png"
+    logo_path = "drone.png"
     p.drawImage(logo_path, x=505, y=710, width=70, height=80) 
 
     # Add the title for the report
@@ -578,12 +578,12 @@ def generate_pdf_thermal_rgb_images(data):
     if image_path_1:
 
         p.drawImage(rgb_image_path, x=x_coordinate-140, y=y_coordinate,width=200, height=200)
-        p.setFont("Helvetica-Oblique", 12)  # Set font style to italic
+        p.setFont("Helvetica-Oblique", 12)  
         p.drawString(title_x-120, 460, "Processed RGB image")
 
     if image_path_2:
         p.drawImage(thermal_image_path, x=x_coordinate+140, y=y_coordinate,width=200, height=200)
-        p.setFont("Helvetica-Oblique", 12)  # Set font style to italic
+        p.setFont("Helvetica-Oblique", 12)  
         p.drawString(title_x+150, 460, "Processed thermal image")
 
     
@@ -604,10 +604,10 @@ def generate_pdf_thermal_rgb_images(data):
         shown_defect = "Dirty"
 
     # Add RGB Defect Type
-    p.setFont("Helvetica-Bold", 12)  # Set font to bold
-    p.drawString(60, 410, "RGB Defect Type: ")  # Draw the bold text
-    p.setFont("Helvetica", 12)  # Set font back to regular
-    p.drawString(220, 410, shown_defect)  # Draw the regular text
+    p.setFont("Helvetica-Bold", 12)  
+    p.drawString(60, 410, "RGB Defect Type: ")  
+    p.setFont("Helvetica", 12)  
+    p.drawString(220, 410, shown_defect)  
 
     if defect == 'bird_drop' or defect == 'dirty':
         suggested_action = "Cleaning"
@@ -625,16 +625,16 @@ def generate_pdf_thermal_rgb_images(data):
         "Unknown defect type!"
 
     # Add the severity 
-    p.setFont("Helvetica-Bold", 12)  # Set font to bold
-    p.drawString(60, 390, "Severity:")  # Draw the bold text
-    p.setFont("Helvetica", 12)  # Set font back to regular
-    p.drawString(220, 390, severity)  # Draw the regular text
+    p.setFont("Helvetica-Bold", 12)  
+    p.drawString(60, 390, "Severity:")  
+    p.setFont("Helvetica", 12)  
+    p.drawString(220, 390, severity)
 
     # Add the suggested action 
-    p.setFont("Helvetica-Bold", 12)  # Set font to bold
-    p.drawString(60, 370, "Suggested Action:")  # Draw the bold text
-    p.setFont("Helvetica", 12)  # Set font back to regular
-    p.drawString(220, 370, suggested_action)  # Draw the regular text
+    p.setFont("Helvetica-Bold", 12) 
+    p.drawString(60, 370, "Suggested Action:") 
+    p.setFont("Helvetica", 12) 
+    p.drawString(220, 370, suggested_action)  
    
     p.showPage()
     p.save()
