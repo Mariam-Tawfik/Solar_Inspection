@@ -5,30 +5,58 @@
     <div class="container">
         <h2 style="margin-top: 20px;">Processed Data</h2>    
         {% if data %}
-            {% for item in data['folder'] %}
-                <div>
-                    <p><strong>Total time taken:</strong> {{ item.total_time }}</p>
-                    {% if item.image_path %}
-                        <img class="img-fluid w-50 d-none d-sm-block" src="{{ item.image_path }}" alt="">
-                    {% endif %}
+        <div>
+            {% if data.thermal_image_path %}
+            <input type="hidden" name="thermal_image" value="{{ data.thermal_image_path }}">
+            <img class="img-fluid w-50 d-none d-sm-block" src="{{ data.thermal_image_path }}" alt="">
+            {% endif %}
+
+            {% if data.rgb_image_path %}
+            <input type="hidden" name="rgb_image" value="{{ data.rgb_image_path }}">
+            <p><strong>Defect Type:</strong> {{ data.defect_type }}</p>
+            <img class="img-fluid w-50 d-none d-sm-block" src="{{ url_for('static', filename=data.rgb_image_path) }}" alt="">
+            {% endif %}
+
+            {% if data.rgb_folder %}
+            <div class="row">
+                {% for image in data.rgb_folder %}
+                <div class="col-md-3">
+                    <input type="hidden" name="rgb_image" value="{{image.rgb_image_path}}">
+                    <img class="img-fluid" src="{{ url_for('static', filename=image.rgb_image_path) }}" alt="">
+                    <p><strong>Defect type:</strong> {{ image.defect_type }}</p>
                 </div>
-            {% endfor %}
-        {% else %}
-            <p>No data available.</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if data.thermal_folder %}
+            <div class="row">
+                {% for image in data.thermal_folder %}
+                <div class="col-md-3">
+                    <input type="hidden" name="thermal_image" value="{{image.thermal_image_path}}">
+                    <img class="img-fluid" src="{{ image.thermal_image_path }}" alt="">
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+
+        </div>
+  
+         {% else %}
+        <p>No data available.</p>
         {% endif %}
     </div>
-    <div class="container text-center"> <!-- Center the button -->
-        <h2 style="margin-top: 20px;">SolarInspect Report</h2>  
-        <form id="pdfForm" method="POST" action="/generate-pdf">
-            {% if data %}
-            <input type="hidden" name="total_time" value="{{ data.total_time }}">
-            {% if data.image_path %}
-            <input type="hidden" name="image_path" value="{{ data.image_path }}">
-            {% endif %}
-            <button type="submit" class="btn btn-primary">Download SolarInspect Report (PDF)</button>
-            {% endif %}
-        </form>
-    </div>
+
+
+<div class="container text-center"> 
+    <form id="pdfForm" method="POST" action="/generate-pdf">
+        {% if data %}
+        <button type="submit" class="btn btn-primary">Download SolarInspect Report (PDF)</button>
+        {% endif %}
+
+    </form>
+ </div>
 </body>
-</html>
+
 {% endblock content %}

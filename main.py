@@ -3,20 +3,28 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from backend.yolo_processing import classify_thermal_PV
 from backend.yolo_processing import segment_PV ,waypoints_planning
-
 from backend.video_preprocessing import extraction
+from backend.efficientNetV2_model_processing import load_model, classify_image
 from io import BytesIO  # Import BytesIO
 import os
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template ,url_for ,flash, redirect, request, send_file,jsonify
 from reportlab.lib.colors import blue
 import requests
+import zipfile
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter  # Import letter module
-
 from flask_restx import Resource, Api
 import json
 from flask_cors import CORS
+
+from generate_pdf import (
+    generate_pdf_rgb_image,
+    generate_pdf_rgb_folder,
+    generate_pdf_thermal_image,
+    generate_pdf_thermal_folder,
+    generate_pdf_thermal_rgb_images,
+)
 
 
 app = Flask(__name__)
@@ -28,6 +36,14 @@ app.config['SECRET_KEY']='962d4d203bdebe514e6a4856b2fa1730279bb814a3cfc3e7202776
 app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///data.db' 
 
 db=SQLAlchemy(app)
+
+def zip_folder(folder_path, zip_path):
+    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for root, dirs, files in os.walk(folder_path):
+            for file in files:
+                zipf.write(os.path.join(root, file),
+                           os.path.relpath(os.path.join(root, file),
+                                           os.path.join(folder_path, '..')))
 
 
 @app.route('/getJsonFile')
@@ -78,13 +94,27 @@ def uploadfield():
 def handle_input():
     # Get the uploaded files
     video_file = request.files.get('video')
-    folder_files = request.files.getlist('folder')
-    image_file = request.files.get('image')
-    print('Hi' ,video_file)
-    print('Hi' ,folder_files)
-    print('Hi' ,image_file)
+    
+     # Get the uploaded files
+    # Option 1: Individual Files or Folders   
+    rgb_image = request.files.get('rgb_image')
+    thermal_image =  request.files.get('thermal_image')
+    rgb_folder = request.files.getlist('rgb_folder')
+    thermal_folder = request.files.getlist('thermal_folder')
+    rgb_video = request.files.get('rgb_video')
+    thermal_video = request.files.get('thermal_video')
+    
+    # Option 2: Combined Files or Folders
+    combined_rgb_image = request.files.get('combined_rgb_image')
+    combined_thermal_image =  request.files.get('combined_thermal_image')
+    combined_rgb_folder = request.files.getlist('combined_rgb_folder')
+    combined_thermal_folder = request.files.getlist('combined_thermal_folder')
+    combined_rgb_video = request.files.get('combined_rgb_video')
+    combined_thermal_video = request.files.get('combined_thermal_video')
 
-    # Process the files using the appropriate function based on the type of input
+
+
+    # Process the files based on the type of input
     processed_data = {}
     if video_file:
         # Define the path to save the video
@@ -92,45 +122,62 @@ def handle_input():
         print('video path',video_path)
         # Save the video file
         video_file.save(video_path)
-        
-
-        
+               
         # Run the extraction function
         extraction(video_path, 'uploads/folder', 'uploads/output')
         print('after')
-
-        
+     
         return 'Video file processed and extraction function executed.'
 
 
-    elif image_file:
+    elif rgb_image:
         # Process individual image file (if provided)
-        input_image_path = f"{image_file.filename}"
-        image_file.save(input_image_path)
-        output_image_path, total_time = classify_thermal_PV(input_image_path)
-        os.remove(input_image_path)
-        processed_data['image'] = {
-            'total_time': f"{total_time:.2f} seconds",
-            'image_path': output_image_path
+        input_image_path = secure_filename(rgb_image.filename)
+        rgb_image.save(input_image_path)  
+        model= load_model()
+        defect_label, formatted_prob = classify_image(input_image_path, model)
+        
+        processed_data = {
+            'formatted_prob':formatted_prob,
+            'defect_type': defect_label,
+            'rgb_image_path': input_image_path
         }
+        #print("Generated URL:", url_for('static', filename=processed_data['rgb_image_path']))
 
-    elif folder_files:
+    elif thermal_image:
+
+         # Process individual image file (if provided)
+        input_image_path = f"temp_{thermal_image.filename}"
+        thermal_image.save(input_image_path)
+        output_image_path, formatted_prob = classify_thermal_PV(input_image_path)
+        os.remove(input_image_path)
+   
+        processed_data = {
+            'formatted_prob':formatted_prob,
+            'thermal_image_path': output_image_path
+        }
+     #   print("Generated URL:", url_for('static', filename=processed_data['thermal_image_path']))
+
+    elif thermal_folder and len(thermal_folder) > 1:
         # Process images in the folder (if provided)
         processed_images = []
        
-        for file in folder_files:
+        for file in thermal_folder:
+            
             if file.filename != '':
                 filename = secure_filename(file.filename)
              
                 # Save each image to a temporary location
                 input_image_path = f"{filename}"
                 file.save(input_image_path)
+                #print(input_image_path)      
                 output_image_path, total_time = classify_thermal_PV(input_image_path)
                 os.remove(input_image_path)
                 processed_images.append({
+
                     'filename': filename,
                     'total_time': f"{total_time:.2f} seconds",
-                    'image_path': output_image_path
+                    'thermal_image_path': output_image_path
                 })
 
         # Create a new folder to store processed images
@@ -141,7 +188,7 @@ def handle_input():
 
         # Move processed images to the new folder
         for processed_image in processed_images:
-            old_path = processed_image['image_path']
+            old_path = processed_image['thermal_image_path']
             new_path = os.path.join(processed_folder_path, processed_image['filename'])
             
             # Check if the target file already exists
@@ -154,22 +201,150 @@ def handle_input():
                     count += 1
             
             os.rename(old_path, new_path)
-            processed_image['image_path'] = new_path
+            processed_image['thermal_image_path'] = new_path
 
-        processed_data['folder'] = processed_images
+        processed_data['thermal_folder'] = processed_images
+       # print("data=processed_data",processed_data)
+
+    elif rgb_folder and len(rgb_folder) > 1:
+         processed_data['rgb_folder'] = []
+
+         # Ensure the target directory exists
+         rgb_folder_path = 'static/rgb_folder'
+         if not os.path.exists(rgb_folder_path):
+            os.makedirs(rgb_folder_path)
+
+         for rgb_image in rgb_folder:
+
+            if rgb_image.filename != '':
+                 # Process individual image file (if provided)
+                input_image_filename = secure_filename(rgb_image.filename) 
+                input_image_path = os.path.join('static/rgb_folder', input_image_filename)
+                rgb_image.save(input_image_path)
+                model= load_model()
+                defect_label,formatted_prob = classify_image(input_image_path, model)
+               # os.remove(input_image_path)
+
+                 # Store processed data for current image in the list
+                processed_data['rgb_folder'].append({
+                    'formatted_prob':formatted_prob,
+                    'defect_type': defect_label,
+                    'rgb_image_path': input_image_path
+                })
+        # Zip the processed folder
+            zip_filename = "rgb_folder_processed.zip"
+            zip_filepath = os.path.join('static', zip_filename)
+            zip_folder(rgb_folder_path, zip_filepath)
+
+            # # Send the zip file to the external API
+            url = URL_Domain + '/uploadRGB'
+            with open(zip_filepath, 'rb') as zip_file:
+                 files = {'file': (zip_filename, zip_file, 'application/zip')}
+                 response = requests.post(url, files=files)
+
+            # print(response)
+
+         #print(processed_data)
+
+    elif combined_rgb_image and combined_thermal_image:
+
+        # RGB_image_processing
+        rgb_image_path = secure_filename(combined_rgb_image.filename)
+        combined_rgb_image.save(rgb_image_path)  
+        model= load_model()
+        defect_label, formatted_prob = classify_image(rgb_image_path, model)
+        
+
+        # thermal_image_processing
+        thermal_image_path = f"temp_{combined_thermal_image.filename}"
+        combined_thermal_image.save(thermal_image_path)
+        output_image_path, total_time= classify_thermal_PV(thermal_image_path)
+        os.remove(thermal_image_path)
+
+        processed_data = {
+            'formatted_prob':formatted_prob,
+            'defect_type': defect_label,
+            'combined_rgb_image_path': rgb_image_path,
+            'total_time': f"{total_time:.2f} seconds",
+            'combined_thermal_image_path': output_image_path
+        }
+   
+    elif combined_rgb_folder and len(combined_rgb_folder) > 1 and combined_thermal_folder and len(combined_thermal_folder) > 1 :
+        processed_data['combined_rgb_thermal_folder'] = []
+
+        # Iterating over RGB and thermal images simultaneously
+        for rgb_image, thermal_image in zip(combined_rgb_folder, combined_thermal_folder):
+            if rgb_image.filename != '' and thermal_image.filename != '':
+                # Process RGB image
+                rgb_input_image_filename = rgb_image.filename.replace('combined_rgb_folder/', '')  # Remove the prefix
+                rgb_input_image_path = secure_filename(rgb_input_image_filename)
+                rgb_image.save(rgb_input_image_path)
+                model = load_model()
+                rgb_defect_label, rgb_formatted_prob = classify_image(rgb_input_image_path, model)
+
+                # Process thermal image
+                thermal_input_image_filename = thermal_image.filename.replace('combined_thermal_folder/', '')  # Remove the prefix
+                thermal_input_image_path = secure_filename(thermal_input_image_filename)
+                thermal_image.save(thermal_input_image_path)
+                thermal_output_image_path,total_time = classify_thermal_PV(thermal_input_image_path)
+                os.remove(thermal_input_image_path)
+
+                # Store processed data for the current images
+                processed_data['combined_rgb_thermal_folder'].append({
+                    'rgb_formatted_prob': rgb_formatted_prob,
+                    'rgb_defect_type': rgb_defect_label,
+                    'rgb_image_path': rgb_input_image_path,
+                    'total_time': f"{total_time:.2f} seconds",
+                    'thermal_image_path': thermal_output_image_path
+                })
+
+        # Print the combined data
+        #print(processed_data['combined_rgb_thermal_folder'])   
+
+    elif rgb_video or thermal_video or combined_rgb_video or combined_thermal_video:
+         # Process video file (if provided)
+        processed_data = "Video processing not supported yet"
+
+    else:
+        print("No input!")
+
+    # Save processed data to JSON file
+    with open('processed_data.json', 'w') as json_file:
+        json.dump(processed_data, json_file)
     
+    return render_template('processed_data.html', data=processed_data )
 
+@app.route('/generate-pdf', methods=['POST'])
+def generate_pdf():
+    # Load processed data from JSON file
+    with open('processed_data.json', 'r') as json_file:
+        data = json.load(json_file)
 
-    # Pass the processed data including image_path to the template
-    return render_template('processed_data.html', data=processed_data)
+    # Handling option 1
+    if 'rgb_image_path' in data:
+        pdf_buffer = generate_pdf_rgb_image(data)
+    elif 'thermal_image_path' in data:
+        pdf_buffer = generate_pdf_thermal_image(data['thermal_image_path'])
+    elif 'rgb_folder' in data:
+        pdf_buffer = generate_pdf_rgb_folder(data['rgb_folder'])
+    elif 'thermal_folder' in data:
+        pdf_buffer = generate_pdf_thermal_folder(data['thermal_folder'])
 
+    # Handling option 2
+    elif 'combined_rgb_image_path' in data and 'combined_thermal_image_path' in data:
+        pdf_buffer = generate_pdf_thermal_rgb_images(data)
+    
+    # elif 'combined_rgb_thermal_folder' in data:
+    #     pdf_buffer = generate_pdf_thermal_rgb_folders(data['combined_rgb_thermal_folder'])
+  
+    else:
+        return "Error: Option is not supported", 400
 
+    return send_file(pdf_buffer, as_attachment=True, mimetype='application/pdf', download_name='SolarInspect_Report.pdf')
 
 @app.route("/service" )
 def service():
     return render_template('services.html',title='Service')
-
-
 
 @app.route('/handle_form_data', methods=['POST'])
 def handle_form_data():
@@ -205,8 +380,7 @@ def getDataJson():
         data = json.load(f)
         return data
     
-
-    
+   
 
 @app.route('/view')
 def view():

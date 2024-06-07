@@ -1,28 +1,147 @@
 {% extends "layout.html" %}
 {% block content %}
 
-
 <div class="container">
-    <h2 class="center">Choose Path</h2>
+    <h2 class="title center">Choose Path</h2>
     <form action="{{ url_for('handle_input') }}" method="post" enctype="multipart/form-data">
+        <!-- Option 1: Individual Files or Folders -->
+        <div class="option-section">
+            <div class="option-header-box">
+                <h3 class="option-header">Option 1: Individual Images, Folders or videos</h3>
+            </div>
+            <div class="branch" id="rgb-image-branch">
+                <label for="rgb_image" class="bold-underline">Choose RGB Image:</label>
+                <input type="file" id="rgb_image" name="rgb_image" accept="image/*">
+            </div>
+            <div class="branch" id="thermal-image-branch">
+                <label for="thermal_image" class="bold-underline">Choose Thermal Image:</label>
+                <input type="file" id="thermal_image" name="thermal_image" accept="image/*">
+            </div>
+            <div class="branch" id="rgb-folder-branch">
+                <label for="rgb_folder" class="bold-underline">Choose Folder with RGB Images:</label>
+                <input type="file" id="rgb_folder" name="rgb_folder" directory webkitdirectory mozdirectory>
+            </div>
+            <div class="branch" id="thermal-folder-branch">
+                <label for="thermal_folder" class="bold-underline">Choose Folder with Thermal Images:</label>
+                <input type="file" id="thermal_folder" name="thermal_folder" directory webkitdirectory mozdirectory>
+            </div>
+            <div class="branch" id="rgb-video-branch">
+                <label for="rgb_video" class="bold-underline">Choose RGB Video:</label>
+                <input type="file" id="rgb_video" name="rgb_video" accept="video/*">
+            </div>
+            <div class="branch" id="thermal-video-branch">
+                <label for="thermal_video" class="bold-underline">Choose Thermal Video:</label>
+                <input type="file" id="thermal_video" name="thermal_video" accept="video/*">
+            </div>
+        </div>
 
-    <div class="branch-container">
-        <div class="branch" id="image-branch">
-            <label for="image" class="bold-underline">Choose Image:</label>
-            <input type="file" id="image" name="image">
+        <!-- Option 2: Combined Files or Folders -->
+        <div class="option-section">
+            <div class="option-header-box">
+                <h3 class="option-header">Option 2: Combined Images, Folders or videos</h3>
+            </div>
+            <div class="branch" id="combined-image-branch">
+                <label for="combined_rgb_image" class="bold-underline">Choose RGB Image:</label>
+                <input type="file" id="combined_rgb_image" name="combined_rgb_image" accept="image/*">
+                <label for="combined_thermal_image" class="bold-underline">Choose Thermal Image:</label>
+                <input type="file" id="combined_thermal_image" name="combined_thermal_image" accept="image/*">
+            </div>
+            <div class="branch" id="combined-folder-branch">
+                <label for="combined_rgb_folder" class="bold-underline">Choose Folder with RGB Images:</label>
+                <input type="file" id="combined_rgb_folder" name="combined_rgb_folder" directory webkitdirectory mozdirectory>
+                <label for="combined_thermal_folder" class="bold-underline">Choose Folder with Thermal Images:</label>
+                <input type="file" id="combined_thermal_folder" name="combined_thermal_folder" directory webkitdirectory mozdirectory>
+            </div>
+            <div class="branch" id="combined-video-branch">
+                <label for="combined_rgb_video" class="bold-underline">Choose RGB Video:</label>
+                <input type="file" id="combined_rgb_video" name="combined_rgb_video" accept="video/*">
+                <label for="combined_thermal_video" class="bold-underline">Choose Thermal Video:</label>
+                <input type="file" id="combined_thermal_video" name="combined_thermal_video" accept="video/*">
+            </div>
         </div>
-        <div class="branch" id="folder-branch">
-            <label for="folder" class="bold-underline">Choose Folder with Images:</label>
-            <input type="file" id="folder" name="folder" directory webkitdirectory mozdirectory>
-        </div>
-        <div class="branch" id="video-branch">
-            <label for="video" class="bold-underline">Choose Video:</label>
-            <input type="file" id="video" name="video">
-        </div>
-    </div>
-    <button type="submit" class="submit-button">Submit</button>
-</form>
+
+        <button type="submit" class="submit-button">Analyze</button>
+    </form>
 </div>
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .title {
+        margin-bottom: 20px;
+        color: blue;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        font-weight: bold;
+    }
+
+    .center {
+        text-align: center;
+    }
+
+    .option-section {
+        border: 2px solid black; 
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        background-color:  #ADD8E6; 
+        width: 100%;
+    }
+
+ 
+    .option-header-box {
+    background-color: #FFFFE0; 
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px; 
+    display: inline-block; 
+    border: 2px solid black; 
+    font-size: 1em; 
+   }
+
+
+    .option-header {
+        text-align: center;
+        font-size: 1.2em;
+        margin: 0;
+    }
+
+    .branch {
+        margin-bottom: 15px;
+        width: 100%;
+    }
+
+    .branch label,
+    .branch input {
+        width: 100%;
+        display: block;
+    }
+
+    .bold-underline {
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+    .submit-button {
+    display: block;
+    margin: 20px auto; 
+    padding: 10px 20px;
+    background-color: grey;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+}
+    .submit-button:hover {
+        background-color: black;
+    }
+
+    
+</style>
 
 </body>
 </html>
