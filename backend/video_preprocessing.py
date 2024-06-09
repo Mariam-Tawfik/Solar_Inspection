@@ -226,7 +226,7 @@ def extraction_left(x2_values, resolution):
             if n_of_modules <= 1:
                 continue
 
-            if (abs(frame[-1]-frame[n_of_modules-2]) <= 5):
+            if (abs(frame[-1]-frame[n_of_modules-2]) <= 8):
                 if (lock == 0):
                     frames_indeses.append(frame_index)
                     lock = 1
