@@ -6,15 +6,21 @@
 <button id="download-button">Download GPS Points</button>
 
 <script>
+    var gpsPoints = {{ gps_points | safe }};
+
     function initMap() {
-        var center = { lat: 24.454865, lng: 32.690726 };
+        var center = { lat: 24.454865, lng: 32.690726 }; // Default center
+
+        if (gpsPoints.length > 0) {
+            center = gpsPoints[0].start; // Use the first point's start location
+        }
+
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 100,
             center: center,
             mapTypeId: google.maps.MapTypeId.SATELLITE
         });
 
-        var gpsPoints = {{ gps_points | safe }};
         var index = 0;
 
         function addNextMarker() {
@@ -44,8 +50,6 @@
     });
 </script>
 
-
 <script src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap" async defer></script>
-
 
 {% endblock content %}

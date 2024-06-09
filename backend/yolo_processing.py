@@ -116,10 +116,6 @@ def nearest_neighbor(gps_points, start_point):
 
     return ordered_points
 
-def pixel_to_gps(x, y):
-    lon = lon1 + x * lon_per_pixel
-    lat = lat1 - y * lat_per_pixel
-    return lat, lon  # Note the order: latitude first, then longitude
 def process_image(image_file_path,label_file_path,lat1,lon1,lat2,lon2):
 
     # Read the image
@@ -182,7 +178,7 @@ def process_image(image_file_path,label_file_path,lat1,lon1,lat2,lon2):
     else:
         valley_index = np.median(filtered_peaks)  # Fallback if not enough peaks are found
 
-    # Custom binary transformation
+
     # Custom binary transformation
     if valley_index < 100:
         _, thresholded_image = cv2.threshold(result, valley_index, 255, cv2.THRESH_BINARY)
@@ -204,18 +200,23 @@ def process_image(image_file_path,label_file_path,lat1,lon1,lat2,lon2):
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5)) # Adjust kernel size as needed
     dilated_image = cv2.dilate(eroded_image, kernel, iterations=1)
 
-
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))  # Adjust kernel size as needed
     eroded_image = cv2.erode(dilated_image, kernel, iterations=1)
+
+
+
     cv2.imwrite('final_image.jpg', eroded_image)
-
-
     blur_radius = 1.0
     threshold = 50
     
-    img = Image.open('final_image.jpg').convert('L')
-    img = np.asarray(img)
+    gray_image = cv2.cvtColor(eroded_image, cv2.COLOR_BGR2GRAY)
+    img = np.asarray(gray_image)
     height, width = img.shape
+    def pixel_to_gps(x, y):
+        lon = lon1 + x * lon_per_pixel
+        lat = lat1 - y * lat_per_pixel
+        return lat, lon  # Note the order: latitude first, then longitude
+
    #////////////////////////////////////////////// Nearest neighbor algorithm////////////////////////
 
 

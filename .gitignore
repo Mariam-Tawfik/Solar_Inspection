@@ -6,3 +6,4 @@ segment_weights.pt
 yolov5s.pt
 best.pt
 __pycache__/
+uploads/folder/
