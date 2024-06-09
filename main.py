@@ -24,6 +24,7 @@ from generate_pdf import (
     generate_pdf_thermal_image,
     generate_pdf_thermal_folder,
     generate_pdf_thermal_rgb_images,
+    generate_pdf_thermal_rgb_folders
 )
 
 
@@ -89,7 +90,6 @@ def uploadfield():
     return render_template('uploadfield.html')
 
 
-
 @app.route('/handle_input', methods=['POST'])
 def handle_input():
     # Get the uploaded files
@@ -116,16 +116,16 @@ def handle_input():
 
     # Process the files based on the type of input
     processed_data = {}
-    if video_file:
+    if rgb_video:
         # Define the path to save the video
-        video_path = os.path.join('uploads', video_file.filename)
+        video_path = os.path.join('uploads', rgb_video.filename)
         print('video path',video_path)
         # Save the video file
-        video_file.save(video_path)
+        rgb_video.save(video_path)
                
         # Run the extraction function
         extraction(video_path, 'uploads/folder', 'uploads/output')
-        print('after')
+
      
         return 'Video file processed and extraction function executed.'
 
@@ -240,7 +240,7 @@ def handle_input():
             url = URL_Domain + '/uploadRGB'
             with open(zip_filepath, 'rb') as zip_file:
                  files = {'file': (zip_filename, zip_file, 'application/zip')}
-                 response = requests.post(url, files=files)
+              #   response = requests.post(url, files=files)
 
             # print(response)
 
@@ -334,8 +334,8 @@ def generate_pdf():
     elif 'combined_rgb_image_path' in data and 'combined_thermal_image_path' in data:
         pdf_buffer = generate_pdf_thermal_rgb_images(data)
     
-    # elif 'combined_rgb_thermal_folder' in data:
-    #     pdf_buffer = generate_pdf_thermal_rgb_folders(data['combined_rgb_thermal_folder'])
+    elif 'combined_rgb_thermal_folder' in data:
+        pdf_buffer = generate_pdf_thermal_rgb_folders(data['combined_rgb_thermal_folder'])
   
     else:
         return "Error: Option is not supported", 400

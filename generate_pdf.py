@@ -149,35 +149,35 @@ def generate_pdf_rgb_folder(folder):
     x_height = 460
     y_width = 410
 
-    # Adding general statistics
-    p.setFont("Helvetica-Bold", 16)
-    p.drawString(title_x+15, page_height - 100, "Field Panorama") 
+    # # Adding general statistics
+    # p.setFont("Helvetica-Bold", 16)
+    # p.drawString(title_x+15, page_height - 100, "Field Panorama") 
 
-    # Add the flight time
-    p.setFont("Helvetica-Bold", 12)  
-    p.drawString(x_width, y_width-5, "Flight Time: ")
-    p.setFont("Helvetica", 12)  
-    p.drawString(270, y_width-5,"20 minutes") 
+    # # Add the flight time
+    # p.setFont("Helvetica-Bold", 12)  
+    # p.drawString(x_width, y_width-5, "Flight Time: ")
+    # p.setFont("Helvetica", 12)  
+    # p.drawString(270, y_width-5,"20 minutes") 
 
-    #  Add the total number of panels in the field
-    p.setFont("Helvetica-Bold", 12) 
-    p.drawString(x_width, y_width-30, "Total number of panels in the field:")  
-    p.setFont("Helvetica", 12)  
-    p.drawString(270, y_width-30, str(50))  
+    # #  Add the total number of panels in the field
+    # p.setFont("Helvetica-Bold", 12) 
+    # p.drawString(x_width, y_width-30, "Total number of panels in the field:")  
+    # p.setFont("Helvetica", 12)  
+    # p.drawString(270, y_width-30, str(50))  
 
-    #  Add the total number of inspected panels
-    p.setFont("Helvetica-Bold", 12)  
-    p.drawString(x_width, y_width-55, "Total number of inspected panels:")  
-    p.setFont("Helvetica", 12)  
-    p.drawString( 270, y_width-55,str(40))  
+    # #  Add the total number of inspected panels
+    # p.setFont("Helvetica-Bold", 12)  
+    # p.drawString(x_width, y_width-55, "Total number of inspected panels:")  
+    # p.setFont("Helvetica", 12)  
+    # p.drawString( 270, y_width-55,str(40))  
 
-    #  Add the percentage of inspected panels
-    p.setFont("Helvetica-Bold", 12) 
-    p.drawString(x_width, y_width-80, "Percentage of inspected panels:")  
-    p.setFont("Helvetica", 12)  
-    p.drawString(270, y_width-80,"80 %") 
+    # #  Add the percentage of inspected panels
+    # p.setFont("Helvetica-Bold", 12) 
+    # p.drawString(x_width, y_width-80, "Percentage of inspected panels:")  
+    # p.setFont("Helvetica", 12)  
+    # p.drawString(270, y_width-80,"80 %") 
 
-    p.showPage()
+    # p.showPage()
 
     print("rgb folder",folder)
     image_count = 0  # Initialize the image count variable
@@ -214,8 +214,8 @@ def generate_pdf_rgb_folder(folder):
         p.setFillColorRGB(0, 0, 0)
            
         # Add the image number
-        p.setFont("Helvetica-Bold", 12) 
-        p.drawString(title_x+35, x_height, f" RGB Image {image_count + 1}") # Label the image
+        p.setFont("Helvetica-Oblique", 12) 
+        p.drawString(title_x+15, x_height, f" Processed RGB Image {image_count + 1}") # Label the image
        
        # Rename defect type
         if rgb_image['defect_type'] == 'clean':
@@ -233,23 +233,32 @@ def generate_pdf_rgb_folder(folder):
         if rgb_image['defect_type'] == 'dirty':
             shown_defect = "Dirty"
 
-        # Add the id of the panel
-        p.setFont("Helvetica-Bold", 12)  
-        p.drawString(x_width, y_width, "Panel ID:") 
-        p.setFont("Helvetica", 12)  
-        p.drawString(220, y_width, str(id)) 
+        if id is not None:
+            # Add the id of the panel
+            p.setFont("Helvetica-Bold", 12)  
+            p.drawString(x_width, y_width, "Panel ID:") 
+            p.setFont("Helvetica", 12)  
+            p.drawString(220, y_width, str(id)) 
 
-        # Add the row number of the panel
-        p.setFont("Helvetica-Bold", 12)  
-        p.drawString(x_width, y_width-20, "Row Number:") 
-        p.setFont("Helvetica", 12)  
-        p.drawString(220, y_width-20, str(row)) 
+        
+        if row is not None:
+            # Add the row number of the panel
+            p.setFont("Helvetica-Bold", 12)  
+            p.drawString(x_width, y_width-20, "Row Number:") 
+            p.setFont("Helvetica", 12)  
+            p.drawString(220, y_width-20, str(row)) 
 
-        # Add RGB Defect Type
+          # Add RGB Defect Type
         p.setFont("Helvetica-Bold", 12)  
-        p.drawString(x_width, y_width-40, "RGB Defect Type: ") 
+        p.drawString(x_width, y_width, "RGB Defect Type: ") 
         p.setFont("Helvetica", 12)  
-        p.drawString( 220, y_width-40, shown_defect)
+        p.drawString( 220, y_width, shown_defect)
+
+        # Add Prediction probability
+        p.setFont("Helvetica-Bold", 12)  
+        p.drawString(x_width, y_width-20, "Prediction prob: ") 
+        p.setFont("Helvetica", 12)  
+        p.drawString( 220, y_width-20, rgb_image['formatted_prob'])
 
         if rgb_image['defect_type'] == 'bird_drop' or rgb_image['defect_type'] == 'dirty':
            suggested_action = "Cleaning"
@@ -266,33 +275,39 @@ def generate_pdf_rgb_folder(folder):
         else:
             "Unknown defect type!"
         
-
+        
         # Add the severity 
         p.setFont("Helvetica-Bold", 12)  
-        p.drawString(x_width, y_width-60, "Severity:") 
+        p.drawString(x_width, y_width-40, "Severity:") 
         p.setFont("Helvetica", 12)  
-        p.drawString( 220, y_width-60,severity) 
+        p.drawString( 220, y_width-40,severity) 
 
          # Add the suggested action 
         p.setFont("Helvetica-Bold", 12) 
-        p.drawString(350, y_width, "Suggested Action:")  
+        p.drawString(x_width, y_width-60, "Suggested Action:")  
         p.setFont("Helvetica", 12)  
-        p.drawString(500, y_width, suggested_action) 
+        p.drawString(220, y_width-60, suggested_action) 
         
-        # Add the center longitude of the panel
-        p.setFont("Helvetica-Bold", 12)  
-        p.drawString(350, y_width-20, "Center Longitude:")  
-        p.setFont("Helvetica", 12)  
-        p.drawString(500, y_width-20, center_longitude)  
+        if center_longitude is not None:
+            # Add the center longitude of the panel
+            p.setFont("Helvetica-Bold", 12)  
+            p.drawString(350, y_width-20, "Center Longitude:")  
+            p.setFont("Helvetica", 12)  
+            p.drawString(500, y_width-20, center_longitude)  
 
-        # Add the center latitude of the panel
-        p.setFont("Helvetica-Bold", 12)  
-        p.drawString(350, y_width-40, "Center Latitude:")  
-        p.setFont("Helvetica", 12) 
-        p.drawString(500, y_width-40, center_latitude) 
+        if center_latitude is not None:
+            # Add the center latitude of the panel
+            p.setFont("Helvetica-Bold", 12)  
+            p.drawString(350, y_width-40, "Center Latitude:")  
+            p.setFont("Helvetica", 12) 
+            p.drawString(500, y_width-40, center_latitude) 
 
         # Add page number
         p.drawString(page_width - 60, 30, f"Page {page_number}")
+
+           # Add copy write
+        p.setFont("Helvetica", 8)
+        p.drawRightString(page_width-550, 30, "© SolarInspect") 
 
         p.showPage()
 
@@ -502,33 +517,39 @@ def format_coordinates(coord):
 
 
 def get_panel_info(panel_number):
-
-    # Load the JSON file
-    with open('data.json', 'r') as file:
-        data = json.load(file)
+    try:
+        # Load the JSON file
+        with open('data.json', 'r') as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        return None, None, None, None
 
     for item in data:
-      if item.get('id') == panel_number:
-        id = item.get('id')
-        row = item.get('group')
-        gps = item.get('gps')
+        if item.get('id') == panel_number:
+            id = item.get('id')
+            row = item.get('group')
+            gps = item.get('gps')
 
-         # Extract gps coordinates from gps if available
-        if gps:
+            # Extract gps coordinates from gps if available
+            if gps:
                 gps_coordinates = gps.get('gps_coordinates')
                 if gps_coordinates:
                     top_left = gps_coordinates.get('top_left')
                     bottom_right = gps_coordinates.get('bottom_right')
                 else:
-                    top_left  = bottom_right = None
-        else:
-                 top_left = bottom_right = None
-        
-         # Calculate center coordinates
-        center_longitude = (top_left['longitude'] + bottom_right['longitude']) / 2
-        center_latitude = (top_left['latitude'] + bottom_right['latitude']) / 2
-       
-        return id, row, format_coordinates(center_longitude), format_coordinates(center_latitude)
+                    top_left = bottom_right = None
+            else:
+                top_left = bottom_right = None
+
+            # Check if top_left and bottom_right are not None before calculating center coordinates
+            if top_left and bottom_right:
+                center_longitude = (top_left['longitude'] + bottom_right['longitude']) / 2
+                center_latitude = (top_left['latitude'] + bottom_right['latitude']) / 2
+                return id, row, format_coordinates(center_longitude), format_coordinates(center_latitude)
+            else:
+                return id, row, None, None
+
+    return None, None, None, None  # Return None if the panel_number is not found
 
 
 def generate_pdf_thermal_rgb_images(data):
@@ -641,3 +662,226 @@ def generate_pdf_thermal_rgb_images(data):
 
     buffer.seek(0)
     return buffer
+
+def generate_pdf_thermal_rgb_folders(folder):
+
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+    
+    # Add the title for the report
+    p.setFillColor(blue)
+    title = "SolarInspect Report"
+    title_width = p.stringWidth(title, "Helvetica-Bold", 16)
+    page_width, page_height = letter
+    title_x = (page_width - title_width) / 2  # Center the title horizontally
+    title_y = page_height - 50 
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(title_x, page_height - 50, title)  # Center the title vertically
+
+    # Add the logo
+    logo_path = "drone.png"
+    p.drawImage(logo_path, x=505, y=710, width=70, height=80) 
+
+    # draw a line
+    p.line(0, title_y - 22, page_width, title_y - 22)
+    p.setFillColorRGB(0, 0, 0)
+
+    # Add page number
+    p.setFont("Helvetica", 12)  
+    p.drawString(page_width - 60, 30, f"Page 0")
+
+    # Add copy write
+    p.setFont("Helvetica", 8)
+    p.drawRightString(page_width-550, 30, "© SolarInspect") 
+
+   # adding coordinates 
+    source_path= ""
+    x_coordinate= title_x-20
+    y_coordinate= 480
+    x_width= 60
+    y_width = 410
+    x_height = 460
+
+
+    # Adding general statistics
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(title_x+15, page_height - 100, "Field Panorama") 
+
+    # Add the flight time
+    p.setFont("Helvetica-Bold", 12)  
+    p.drawString(x_width, y_width-5, "Flight Time: ")
+    p.setFont("Helvetica", 12)  
+    p.drawString(270, y_width-5,"20 minutes") 
+
+    #  Add the total number of panels in the field
+    p.setFont("Helvetica-Bold", 12) 
+    p.drawString(x_width, y_width-30, "Total number of panels in the field:")  
+    p.setFont("Helvetica", 12)  
+    p.drawString(270, y_width-30, str(50))  
+
+    #  Add the total number of inspected panels
+    p.setFont("Helvetica-Bold", 12)  
+    p.drawString(x_width, y_width-55, "Total number of inspected panels:")  
+    p.setFont("Helvetica", 12)  
+    p.drawString( 270, y_width-55,str(40))  
+
+    #  Add the percentage of inspected panels
+    p.setFont("Helvetica-Bold", 12) 
+    p.drawString(x_width, y_width-80, "Percentage of inspected panels:")  
+    p.setFont("Helvetica", 12)  
+    p.drawString(270, y_width-80,"80 %") 
+
+    p.showPage()
+
+    image_count = 0  # Initialize the image count variable
+    page_number = 1  # Initialize page number variable
+    severity = ""
+    suggested_action = ""
+    shown_defect = ""
+
+    for data in folder:
+        rgb_image = data['rgb_image_path']
+        thermal_image = data['thermal_image_path']
+        id, row,center_longitude, center_latitude =  get_panel_info(image_count) # get the info of the panel
+
+
+        # Add the RGB image to the PDF
+        if 'rgb_image_path' in data:
+             p.drawImage(rgb_image, x=x_coordinate-140, y=y_coordinate,width=200, height=200)
+             p.setFont("Helvetica-Oblique", 12)  
+             p.drawString(title_x-120, 460,f" Processed RGB image {image_count + 1}")
+            
+
+
+        # Add the thermal image to the PDF
+        if 'thermal_image_path' in data:
+            p.drawImage(thermal_image, x=x_coordinate+140, y=y_coordinate,width=200, height=200)
+            p.setFont("Helvetica-Oblique", 12)  
+            p.drawString(title_x+150, 460,f" Processed thermal image {image_count + 1}")
+
+        
+        # Add the logo
+        logo_path = "drone.png"
+        p.drawImage(logo_path, x=505, y=710, width=70, height=80) 
+
+        # Add the title for the report
+        p.setFillColor(blue)
+        title = "SolarInspect Report"
+        title_width = p.stringWidth(title, "Helvetica-Bold", 16)
+        page_width, page_height = letter
+        title_x = (page_width - title_width) / 2  # Center the title horizontally
+        title_y = page_height - 50  
+        p.setFont("Helvetica-Bold", 16)
+        p.drawString(title_x, page_height - 50, title)  # Center the title vertically
+
+        # draw a line
+        p.line(0, title_y - 22, page_width, title_y - 22)
+        p.setFillColorRGB(0, 0, 0)
+
+       
+       # Rename defect type
+        if data['rgb_defect_type'] == 'clean':
+            shown_defect = "Clean (No defect)"
+        
+        if data['rgb_defect_type'] == 'bird_drop':
+            shown_defect = "Bird Drop"
+
+        if data['rgb_defect_type'] == 'physical_damage':
+           shown_defect = "Physical Damage"
+        
+        if data['rgb_defect_type'] == 'Electrical_damage':
+            shown_defect = "Electrical Damage"
+        
+        if data['rgb_defect_type'] == 'dirty':
+            shown_defect = "Dirty"
+
+        if id is not None:
+            # Add the id of the panel
+            p.setFont("Helvetica-Bold", 12)  
+            p.drawString(350, y_width, "Panel ID:") 
+            p.setFont("Helvetica", 12)  
+            p.drawString(500, y_width, str(id)) 
+
+        if row is not None:
+            # Add the row number of the panel
+            p.setFont("Helvetica-Bold", 12)  
+            p.drawString(350, y_width-20, "Row Number:") 
+            p.setFont("Helvetica", 12)  
+            p.drawString(500, y_width-20, str(row)) 
+
+        # Add RGB Defect Type
+        p.setFont("Helvetica-Bold", 12)  
+        p.drawString(x_width, y_width, "RGB Defect Type: ") 
+        p.setFont("Helvetica", 12)  
+        p.drawString( 220, y_width, shown_defect)
+
+        # Add Prediction probability
+        p.setFont("Helvetica-Bold", 12)  
+        p.drawString(x_width, y_width-20, "Prediction prob: ") 
+        p.setFont("Helvetica", 12)  
+        p.drawString( 220, y_width-20, data['rgb_formatted_prob'])
+
+       
+
+        if data['rgb_defect_type']  == 'bird_drop' or data['rgb_defect_type']  == 'dirty':
+           suggested_action = "Cleaning"
+           severity ="Minor"
+        
+        elif data['rgb_defect_type']  == 'Electrical_damage' or data['rgb_defect_type']  == 'physical_damage':
+           suggested_action = "Repairing/Replacing"
+           severity ="Major"
+        
+        elif data['rgb_defect_type'] == 'clean':
+           suggested_action = "No action needed"
+           severity ="No severity"
+          
+        else:
+            "Unknown defect type!"
+        
+
+        # Add the severity 
+        p.setFont("Helvetica-Bold", 12)  
+        p.drawString(x_width, y_width-40, "Severity:") 
+        p.setFont("Helvetica", 12)  
+        p.drawString( 220, y_width-40,severity) 
+
+         # Add the suggested action 
+        p.setFont("Helvetica-Bold", 12) 
+        p.drawString(x_width, y_width-60, "Suggested Action:")  
+        p.setFont("Helvetica", 12)  
+        p.drawString(220, y_width-60, suggested_action) 
+
+
+        if center_longitude is not None:
+      
+            # Add the center longitude of the panel
+            p.setFont("Helvetica-Bold", 12)  
+            p.drawString(350, y_width-40, "Center Longitude:")  
+            p.setFont("Helvetica", 12)  
+            p.drawString(500, y_width-40, center_longitude)  
+
+        if center_latitude is not None:
+
+            # Add the center latitude of the panel
+            p.setFont("Helvetica-Bold", 12)  
+            p.drawString(350, y_width-60, "Center Latitude:")  
+            p.setFont("Helvetica", 12) 
+            p.drawString(500, y_width-60, center_latitude) 
+
+        # Add page number
+        p.drawString(page_width - 60, 30, f"Page {page_number}")
+
+        # Add copy write
+        p.setFont("Helvetica", 8)
+        p.drawRightString(page_width-550, 30, "© SolarInspect") 
+
+        p.showPage()
+
+        image_count += 1  # Increment the image count
+        page_number += 1  # Increment the page number
+        
+    p.save()
+
+    buffer.seek(0)
+    return buffer
+

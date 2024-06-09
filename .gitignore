@@ -3,6 +3,8 @@ processed_images/
 flaskApp/
 backend/__pycache__/
 segment_weights.pt
+my_efficientnetv2_model.pth
 yolov5s.pt
 best.pt
 __pycache__/
+uploads/
