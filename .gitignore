@@ -7,4 +7,6 @@ my_efficientnetv2_model.pth
 yolov5s.pt
 best.pt
 __pycache__/
+venv/
+venv
 uploads/

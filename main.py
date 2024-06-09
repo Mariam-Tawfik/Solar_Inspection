@@ -29,7 +29,7 @@ from generate_pdf import (
 
 
 app = Flask(__name__)
-URL_Domain='https://8206-45-247-72-132.ngrok-free.app'
+URL_Domain='http://127.0.0.1:3000'
 
 
 app.config['SECRET_KEY']='962d4d203bdebe514e6a4856b2fa1730279bb814a3cfc3e720277662f98aa9fb'
@@ -355,6 +355,7 @@ def handle_form_data():
         gpsfile = json.load(f)
     # data={'filename':filename ,'layer_name':layer_name,'GPS_file': ,'Images'}
    data={'filename':filename ,'layer_name':layer_name,'gps_coordinates':gpsfile}
+#    print(data)
 
    url=URL_Domain+'/api/processCAD'
 
@@ -508,7 +509,44 @@ def download_gps_file():
     return "File not found", 404
 
 
+@app.route('/get-panorama')
+def get_panorama():
+    url = URL_Domain + '/api/get_image/row_1'
+    response = requests.get(url)
+    # recive a send_File image
+    # print( response.content)
+    # save
+    with open('static/panorama.jpg', 'wb') as f:
+         f.write(response.content)
 
+    return jsonify({'message': 'Panorama image received successfully!'})
+
+@app.route('/get-panorama-boxes')
+def get_panorama_boxes():
+    # recive a send_File image
+    # print( response.content)
+    # save
+    with open("static/panorama.jpg", 'rb') as f:
+        img_data = f.read()
+        url = URL_Domain + '/api/panels_rgb/row_1'
+        files = {'image': img_data}
+        response = requests.post(url, files=files)
+        with open('static/panorama_boxes.jpg', 'wb') as f:
+            f.write(response.content)
+
+    return jsonify({'message': 'Panorama boxes image received successfully!'})
+
+@app.route('/process_click/<foldername>', methods=['POST'])
+def process_click(foldername):
+    x = int(request.form.get('image.x'))
+    y = int(request.form.get('image.y'))
+    url = URL_Domain + f'/api/process_click/{foldername}/{x}/{y}'
+    response = requests.get(url)
+    return response.json()
+
+@app.route('/show_panorama_boxes')
+def show_panorama_boxes():
+    return render_template('interactive_panorama.html')
 
 if __name__ == "__main__":
     # Run the Flask app in debug mode
